@@ -5,6 +5,41 @@ local sockethelper = require "http.sockethelper"
 local urllib = require "http.url"
 local table = table
 local string = string
+local localHmtlVarTbl = {}
+localHmtlVarTbl.curIndex = 1
+local htmlHeader
+local htmlBottom
+local function setHtmlShell()
+	local f = assert(io.open([==[examples/html_header.html]==],'r'))
+	local content = f:read("*all")
+	htmlHeader = content
+	
+	f = assert(io.open([==[examples/html_bottom.html]==],'r'))
+	local content = f:read("*all")
+	htmlBottom = content
+end
+
+setHtmlShell()
+
+local mainContent = {}
+
+local function reamAllContent()
+	local f = assert(io.open([==[examples/resource/content.data]==],'r'))
+	for line in f:lines() do
+		table.insert(mainContent, line)
+	end
+end
+reamAllContent()
+
+
+local function getLocalVar(varName)
+	print("getLocalVar")
+	print(varName)
+	print(localHmtlVarTbl[varName])
+	return localHmtlVarTbl[varName] or ""
+end
+
+local function trim(s) return (string.gsub(s, "^%s*(.-)%s*$", "%1"))end
 
 local mode = ...
 
@@ -39,12 +74,42 @@ skynet.start(function()
 						table.insert(tmp, string.format("query: %s= %s", k,v))
 					end
 				end
-				table.insert(tmp, "-----header----")
+				--table.insert(tmp, "-----header----")
 				for k,v in pairs(header) do
-					table.insert(tmp, string.format("%s = %s",k,v))
+					--table.insert(tmp, string.format("%s = %s",k,v))
 				end
-				table.insert(tmp, "-----body----\n" .. body)
-				response(id, code, table.concat(tmp,"\n"))
+				
+				local bodyTbl = {}
+				if body then
+					local q = urllib.parse_query(body)
+					for k, v in pairs(q) do
+						print("set",k,v)
+						k = trim(k)
+						v = trim(v)
+						bodyTbl[k] = v
+					end
+				end
+
+				if not bodyTbl.page then
+					return
+				end
+				print("recieve page "..bodyTbl.page)
+
+				local beginIndex = tonumber(bodyTbl.page or 1 ) or 1 + 1
+
+				table.insert(tmp, "-----body----<br/>" .. body)
+				
+				localHmtlVarTbl.curIndex = beginIndex + 1
+				print("set beginIndex "..beginIndex)
+
+				for i=beginIndex,beginIndex+1 do
+					table.insert(tmp, mainContent[i] or "")
+				end
+
+				htmlBottom = string.gsub(htmlBottom, "%$([%w]+)", getLocalVar)
+
+				response(id, code, htmlHeader..table.concat(tmp,"\n")..htmlBottom)
+				--response(id, code, htmlHeader..htmlBottom)
 			end
 		else
 			if url == sockethelper.socket_error then
