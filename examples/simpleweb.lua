@@ -91,7 +91,7 @@ skynet.start(function()
 				end
 
 				if not bodyTbl.page then
-					return
+					bodyTbl.page = 1
 				end
 				print("recieve page "..bodyTbl.page)
 
