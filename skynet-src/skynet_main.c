@@ -113,7 +113,9 @@ main(int argc, char *argv[]) {
 
 	struct skynet_config config;
 
+	// 注册一个新的lua虚拟机
 	struct lua_State *L = luaL_newstate();
+	// 加载基本库
 	luaL_openlibs(L);	// link lua lib
 
 	int err = luaL_loadstring(L, load_config);

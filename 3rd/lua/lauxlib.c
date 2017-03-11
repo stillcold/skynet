@@ -1025,6 +1025,7 @@ static int panic (lua_State *L) {
 
 LUALIB_API lua_State *luaL_newstate (void) {
   lua_State *L = lua_newstate(l_alloc, NULL);
+  // panic 用以handle异常的情况
   if (L) lua_atpanic(L, &panic);
   return L;
 }
