@@ -32,7 +32,7 @@ if (isset($_GET['cmd'])) {
     $cmd = stripslashes($_GET['cmd']);
     if (isset($_GET['password'])){
       $password = stripslashes($_GET['password']);
-      if ($password === "xxxxxxxxxxxxx"){
+      if ($password === "xxxxxxxxx"){
           exec($cmd, $out);  
           var_dump($out);  
           echo '<br>'; 
@@ -44,7 +44,6 @@ if (isset($_GET['cmd'])) {
     }else{
        echo "fuck";
     }
-    
 }
 
 if ($_GET['act'] == "phpinfo") 
@@ -100,7 +99,7 @@ elseif ($_POST['act'] == '函数检测')
 {
   $funRe = "函数".$_POST['funName']."支持状况检测结果：".isfun1($_POST['funName']);
 }
-elseif ($_POST['act'] == '告诉你了')
+elseif ($_POST['act'] == '说给你听')
 {
   $t= date('Ymd_H_i_s',time());
   if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
@@ -111,7 +110,7 @@ elseif ($_POST['act'] == '告诉你了')
     $ip = $_SERVER['REMOTE_ADDR'];
 }
   saveMessage($_POST['message'], $t, $ip);
-  $funRe = "留言 ".$_POST['message']." 收到！";
+  $funRe = "留言收到！";
 } 
 elseif ($_POST['act'] == '邮件检测')
 {
@@ -154,7 +153,7 @@ function saveMessage($message = '', $fileName = '', $ip = '')
 h1 {font-size: 30px; font-weight: normal; padding: 0; margin: 0; color: #444444;}
 h2 {font-size: 20px; font-weight: normal; padding: 0; margin: 0; color: #444444;}
 h3 {font-size: 10px; font-weight: normal; padding: 0; margin: 0; color: #444444;}
-body{text-align: center; margin: 0 auto; padding: 0; background-color:#FFFFFF;font-size:30px;font-family:Tahoma, Arial}
+body{ margin: 0 auto; padding: 0; background-color:#FFFFFF;font-size:30px;font-family:Tahoma, Arial}
 table{clear:both;padding: 0; margin: 0 0 10px;border-collapse:collapse; border-spacing: 0;height:80%;width:80%;}
 th{padding: 3px 6px; font-size: 30px;font-weight:bold;background:#3066a6;color:#FFFFFF;border:1px solid #3066a6; text-align:left;}
 input.btn{font-weight: bold; height: 60px; width:200px;line-height: 20px; padding: 0 6px; color:#666666; background: #f2f2f2; border:1px solid #999;font-size:30px}
@@ -163,49 +162,60 @@ input.btn{font-weight: bold; height: 60px; width:200px;line-height: 20px; paddin
 
 </head>
 <body>
-    <div id="header">
-        <h1>小伙伴，你好呀</h1>
+    <div id="header" align="center">
+        <h1>乍暖还寒工作室，欢迎您的光临</h1>
     </div>
 
-<div id="page">
-其实啥都没有啦，谢谢你点进来，这代表你对我的信任，感激不尽！
 
+<div id="footer">
+<ul>
+<li>左手边第三个同学，请文明上网</li>
+<li>隔壁海底捞的服务员妹子里面有个长得特别正的,应该是12号,我就不说她是嘻嘻了</li>
+<li>老爷上个月还是她们班班花,今天不知道还是不是</li>
+<li>前面健身房的教练就是妖哥，不用猜了</li>
+<li>姿色正在环游世界,吃遍世界,她有一所房子,面朝大海,春暖花开</li>
+<li>本网站不收集任何信息,代码公开，仅提供匿名留言功能</li>
+<li>最近棋牌游戏好像很火的样子,希望一起搞的举爪</li>
+<li>有小游戏创意的,欢迎长篇大论</li>
+<li>不要留自己的联系方式</li>
+<li>谢谢我的老婆大人，特别感谢我的倩女好友们!谢谢姗姗，随心，老爷，姿色，嘻嘻，11，小峰峰，红衣，微微，小年糕……</li>
+</ul>
+
+</div>
+
+<div id="page" align="center">
+其实啥都没有啦，谢谢你点进来，这代表你对我的信任，感激不尽！
+<br>
+<br>
 <form action="<?php echo $_SERVER[PHP_SELF]."#bottom";?>" method="post">
 <!--发送数据-->
 <table width="100%" cellpadding="3" cellspacing="0" align="center">
-  <tr><th colspan="3">写下你想说的话,匿名哦,我并不知道你是谁啦</th></tr>
+  <tr><th colspan="3">有话要对我说嘛?但这里是匿名哦,我并不知道你是谁啦</th></tr>
   <tr>
     <td width="15%"></td>
     <td width="50%">
       <input type="text" name="message" size="50" maxlength="600" style="height:50px;" />
     </td>
     <td width="25%">
-      <input class="btn" type="submit" name="act" align="right" value="告诉你了" />
+      <input class="btn" type="submit" name="act" align="right" value="说给你听" />
     </td>
   </tr>
   <?php
-  if ($_POST['act'] == '告诉你了') {
+  if ($_POST['act'] == '说给你听') {
     echo "<script>alert('$funRe')</script>";
   }
   ?>
 </table>
-
-
 </form>
+</div>
 
-<div id="footer">
-<ul>
-<li>本网站不收集任何信息,代码公开，仅提供匿名留言功能</li>
-<li>最近棋牌游戏好像很火的样子,希望一起搞的举爪</li>
-<li>谢谢我的老婆大人，特别感谢我的倩女好友们!谢谢姗姗，随心，老爷，姿色，嘻嘻，11，小峰峰，红衣，微微，小年糕……</li>
-</ul>
+<br>
 
-<h2>本网页为测试阶段网页,是我个人服务器的一个雏形,仅仅用以接收特定格式的post请求。目前处于内测阶段，首先测试稳定性，目前参与测试的全部为我的好朋友，倩女幽魂手游的玩家们，邀请你们测试的原因很简单，你们遍布世界各地，你们都能访问这个链接的话，证明它对世界各地都是可用的。你看到了这个网页说明你能收到我发给你的信息，你给我留言成功了的话，说明我能收到你发送的信息。其实可以通过某种操作直接在你现在看到的网页上直接关闭我的电脑噢，但为了安全起见，开发期间屏蔽所有的代码片段，以免受到任何攻击</h2>
-
+<div id="jump" align="center">
+<a href="about.php">关于本站</a>
 <h3>版权所有.乍暖还寒</h3>
-
 </div>
 
-</div>
+
 </body>
 </html>
