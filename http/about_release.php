@@ -19,7 +19,7 @@ input.btn{font-weight: bold; height: 60px; width:200px;line-height: 20px; paddin
 
 </head>
 <body>
-    <div id="header">
+    <div id="header" align="center">
         <h1>关于本站</h1>
     </div>
 
@@ -27,8 +27,15 @@ input.btn{font-weight: bold; height: 60px; width:200px;line-height: 20px; paddin
 <div id="footer">
 
 <h2>本网页为测试阶段网页,是我个人服务器的一个雏形,仅仅用以接收特定格式的post请求。目前处于内测阶段，首先测试稳定性，目前参与测试的全部为我的好朋友，倩女幽魂手游的玩家们，邀请你们测试的原因很简单，你们遍布世界各地，你们都能访问这个链接的话，证明它对世界各地都是可用的。你看到了这个网页说明你能收到我发给你的信息，你给我留言成功了的话，说明我能收到你发送的信息。其实可以通过某种操作直接在你现在看到的网页上直接关闭我的电脑噢，但为了安全起见，开发期间屏蔽所有的代码片段，以免受到任何攻击</h2>
+<br>
+<br>
+<div id="jump" align="center">
 <a href="home.php">返回首页</a>
 <h3>版权所有.乍暖还寒</h3>
+</div>
+
+
+<br>
 
 </div>
 
