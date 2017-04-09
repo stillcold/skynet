@@ -310,8 +310,7 @@ function doGetDiscByTarget($target)
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <title>欢迎光临</title>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8;initial-scale=1.0, maximum-scale=1.0, user-scalable=0;" name="viewport" />
 <style type="text/css">
 <!--
 * {font-family: Tahoma, "Microsoft Yahei", Arial; }
