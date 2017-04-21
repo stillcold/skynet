@@ -48,8 +48,12 @@ end
 
 function GA:_GenerateRandomSolution()
 	local pathOfEachCar = {}
-	for i=1,GA.m_sampleCount do
-		local randomCar = 
+	for i=1,g_countOfCar do
+		pathOfEachCar[i] = {}
+	end
+	for i=1,g_countOfClient do
+		local randomCar = random(g_countOfCar)
+		table.insert(pathOfEachCar[randomCar], i)
 	end
 	return pathOfEachCar
 end
@@ -58,8 +62,14 @@ function GA:_SetBestSolution(index)
 	self.m_solution = self.m_solutionTbl[index]
 end
 
+-- 适用于三个函数
 function GA:_GetChildFromParent(index1, index2)
-
+	local childPath = {}
+	local taken = {}
+	for i=1,g_countOfCar do
+		childPath[i] = self.m_solutionTbl[index1][i]
+		childPath[]
+	end
 end
 
 function GA:_GetRandomSelected()
