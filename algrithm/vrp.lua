@@ -1,8 +1,8 @@
 --[[
 环境变量
 --]]
-local random = math.random()
-local ceil = math.ceil()
+local random = math.random
+local ceil = math.ceil
 
 --[[
 题目中的输入
@@ -14,7 +14,7 @@ local g_countOfClient = 11
 --[[
 常量
 --]]
-local g_RUNTIME = 60*1 -- 1min
+--local g_RUNTIME = 60*1 -- 1min
 
 
 local GA = {}
@@ -26,6 +26,8 @@ GA.m_compareSequence = nil
 GA.m_selected = nil
 GA.m_outed = nil
 GA.m_bestEval = -1
+GA.m_currentGeneration = 0 -- 当前迭代次数
+GA.m_maxGeneration = 100 -- 终止条件
 
 function GA:Init()
 	self.m_compareSequence = {}
@@ -44,10 +46,12 @@ function GA:_RandomSelectSeqeuence()
 	end
 end
 
---todo
 function GA:_GenerateRandomSolution()
 	local pathOfEachCar = {}
-
+	for i=1,GA.m_sampleCount do
+		local randomCar = 
+	end
+	return pathOfEachCar
 end
 
 function GA:_SetBestSolution(index)
@@ -89,6 +93,13 @@ end
 function GA:_Evaluate(index)
 end
 
+function GA:ShouldEnd()
+	if self.m_currentGeneration >= self.m_maxGeneration then
+		return true
+	end
+	return false
+end
+
 function GA:Select()
 	self.m_selected = {}
 	self.m_outed = {}
@@ -117,8 +128,9 @@ function GA:Run()
 	self:Init()
 	self:Generate()
 	self.m_beginCalTime = os.time()
-	while os.time() - self.m_beginTime < g_RUNTIME do
+	while self:ShouldEnd() do
 		GA:Select()
 		GA:Mutation()
+		GA.m_currentGeneration = GA.m_currentGeneration + 1
 	end
 end
