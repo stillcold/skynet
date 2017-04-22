@@ -63,6 +63,12 @@ function GA:Init()
 	for i=1,self.m_sampleCount do
 		table.insert(self.m_compareSequence, i)
 	end
+	for i,v in ipairs(g_clientBeginTime) do
+		g_clientBeginTime[i] = v *60
+	end
+	for i,v in ipairs(g_clientEndTime) do
+		g_clientEndTime[i] = v *60
+	end
 end
 
 function GA:_RandomSelectSeqeuence()
@@ -384,7 +390,7 @@ function GA:_Evaluate(solutionIndex)
 
 	end
 
-	return {cost = cost, satisfy = satisfy, maxLen = maxLen}
+	return {cost = cost, satisfy = 1/satisfy, maxLen = maxLen}
 end
 
 function GA:ShouldEnd()
