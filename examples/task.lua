@@ -5,40 +5,6 @@ local sockethelper = require "http.sockethelper"
 local urllib = require "http.url"
 local table = table
 local string = string
-local localHmtlVarTbl = {}
-localHmtlVarTbl.curIndex = 1
-local htmlHeader
-local htmlBottom
-local function setHtmlShell()
-	local f = assert(io.open([==[examples/html_header.html]==],'r'))
-	local content = f:read("*all")
-	htmlHeader = content
-	
-	f = assert(io.open([==[examples/html_bottom.html]==],'r'))
-	local content = f:read("*all")
-	htmlBottom = content
-end
-
-
-setHtmlShell()
-
-local mainContent = {}
-
-local function reamAllContent()
-	local f = assert(io.open([==[examples/resource/content.data]==],'r'))
-	for line in f:lines() do
-		table.insert(mainContent, line)
-	end
-end
-reamAllContent()
-
-
-local function getLocalVar(varName)
-	print("getLocalVar")
-	print(varName)
-	print(localHmtlVarTbl[varName])
-	return localHmtlVarTbl[varName] or ""
-end
 
 local function trim(s) return (string.gsub(s, "^%s*(.-)%s*$", "%1"))end
 
@@ -64,21 +30,6 @@ skynet.start(function()
 				response(id, code)
 			else
 				local tmp = {}
-				if header.host then
-					table.insert(tmp, string.format("host: %s", header.host))
-				end
-				local path, query = urllib.parse(url)
-				table.insert(tmp, string.format("path: %s", path))
-				if query then
-					local q = urllib.parse_query(query)
-					for k, v in pairs(q) do
-						table.insert(tmp, string.format("query: %s= %s", k,v))
-					end
-				end
-				--table.insert(tmp, "-----header----")
-				for k,v in pairs(header) do
-					--table.insert(tmp, string.format("%s = %s",k,v))
-				end
 				
 				local bodyTbl = {}
 				if body then
@@ -100,7 +51,6 @@ skynet.start(function()
 					bodyInfoStr = bodyInfoStr.."key "..k.. " value "..v.."\n"
 				end
 				
-
 				response(id, code, table.concat(tmp,"\n")..bodyInfoStr)
 			end
 		else
