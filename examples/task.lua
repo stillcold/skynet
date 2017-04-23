@@ -109,7 +109,7 @@ skynet.start(function()
 
 				htmlBottom = string.gsub(htmlBottom, "%$([%w]+)", getLocalVar)
 
-				response(id, code, htmlHeader..table.concat(tmp,"\n")..htmlBottom)
+				response(id, code, table.concat(tmp,"\n"))
 				--response(id, code, htmlHeader..htmlBottom)
 			end
 		else
