@@ -91,26 +91,17 @@ skynet.start(function()
 					end
 				end
 
-				if not bodyTbl.page then
-					bodyTbl.page = 1
-				end
-				print("recieve page "..bodyTbl.page)
-
 				local beginIndex = tonumber(bodyTbl.page or 1 ) or 1 + 1
 
 				table.insert(tmp, "-----body----<br/>" .. body)
-				
-				localHmtlVarTbl.curIndex = beginIndex + 1
-				print("set beginIndex "..beginIndex)
 
-				for i=beginIndex,beginIndex+1 do
-					table.insert(tmp, mainContent[i] or "")
+				local bodyInfoStr = ""
+				for k,v in pairs(bodyTbl) do
+					bodyInfoStr = bodyInfoStr.."key "..k.. " value "..v.."\n"
 				end
+				
 
-				htmlBottom = string.gsub(htmlBottom, "%$([%w]+)", getLocalVar)
-
-				response(id, code, table.concat(tmp,"\n"))
-				--response(id, code, htmlHeader..htmlBottom)
+				response(id, code, table.concat(tmp,"\n")..bodyInfoStr)
 			end
 		else
 			if url == sockethelper.socket_error then
