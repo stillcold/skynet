@@ -57,6 +57,7 @@ function actionTbl:addTask(bodyTbl)
 	end
 
 	table.insert(taskData, {title = title, content = content, priority = priorityTbl[priority], deadLine = deadLine, taskType = taskTypeTbl[taskType]})
+	return "addTask done"
 
 end
 
@@ -92,8 +93,8 @@ skynet.start(function()
 					bodyInfoStr = bodyInfoStr.."key "..k.. " value "..v.."\n"
 				end
 				
-				response(id, code, table.concat(tmp,"\n")..bodyInfoStr)
-				
+				--response(id, code, table.concat(tmp,"\n")..bodyInfoStr)
+
 				local retRes = "none action taken"
 				local cmd = bodyTbl[cmd]
 				if not cmd then
