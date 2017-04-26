@@ -3,6 +3,7 @@ local socket = require "socket"
 local httpd = require "http.httpd"
 local sockethelper = require "http.sockethelper"
 local urllib = require "http.url"
+local json = require "json"
 local table = table
 local string = string
 
@@ -33,7 +34,7 @@ skynet.start(function()
 				
 				local bodyTbl = {}
 				if body then
-					local q = urllib.parse_query(body)
+					local q = json.decode(body)
 					for k, v in pairs(q) do
 						print("set",k,v)
 						k = trim(k)
