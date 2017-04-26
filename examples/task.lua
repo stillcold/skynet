@@ -96,7 +96,7 @@ skynet.start(function()
 				--response(id, code, table.concat(tmp,"\n")..bodyInfoStr)
 
 				local retRes = "none action taken"
-				local cmd = bodyTbl[cmd]
+				local cmd = bodyTbl.cmd
 				if not cmd then
 					response(id, code, retRes)
 					return
