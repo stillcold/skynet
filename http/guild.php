@@ -210,7 +210,7 @@ input.btn{font-weight: bold; height: 60px; width:200px;line-height: 20px; paddin
 
 <div align="center">这里是倩女幽魂手游血染白霜帮会的主页，并非游戏官方网站！</div>
 <div id="jump" align="center">
-<a href="http://qnm.163.com/index.html">游戏官网</a> <a href="how_to_play.php">玩法攻略</a> <a href="member_info_debug.php">成员介绍</a> <a href="about_guild.php">关于本站</a>
+<a href="http://qnm.163.com/index.html">游戏官网</a> <a href="how_to_play.php">玩法攻略</a> <a href="member_info_debug.php">成员介绍</a> <a href="guild_vx.php">微信群</a> <a href="about_guild.php">关于本站</a>
 <h3>版权所有.乍暖还寒</h3>
 </div>
 </div>
