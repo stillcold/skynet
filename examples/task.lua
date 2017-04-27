@@ -27,6 +27,13 @@ local function response(id, ...)
 	end
 end
 
+local function GetDateFromNumber(v)
+	local t = {}
+	t.year,t.month,t.day,t.hour,t.min,t.sec = tostring(v):match("(....)-(..)-(..)%s+(..):(..):(..)")
+	for k,v in pairs(t) do t[k] = tonumber(v) end
+	return t
+end
+
 function actionTbl:addTask(bodyTbl)
 	local title, taskType, content, deadLine, priority = bodyTbl.title, bodyTbl.taskType,bodyTbl.content,bodyTbl.deadLine,bodyTbl.priority
 	if not title then
@@ -45,7 +52,7 @@ function actionTbl:addTask(bodyTbl)
 		return "invalidPriority"
 	end
 	
-	local deadLine = os.date("%c", deadLine)
+	deadLine = os.time(GetDateFromNumber(deadLine))
 	if not deadLine then
 		return "invalidFormatDeadLine,convert fail"
 	end
