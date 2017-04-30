@@ -83,7 +83,7 @@ local function GetDateFromNumber(v)
 	end
 
 	if isSpecialStr then
-		rawDeadline = ""..t.year..t.month..t.day.."_"..t.hour..t.min..t.sec
+		rawDeadline = ""..t.year..t.month..t.day.."_"..t.hour..":"..t.min..":"..t.sec
 		return t,rawDeadline
 	end
 
