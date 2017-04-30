@@ -44,9 +44,38 @@ local function response(id, ...)
 	end
 end
 
+
+-- 20170501_13:46:59
 local function GetDateFromNumber(v)
+
+	if v == "now" then
+		return os.date("*t",os.time() )
+	end
+
+	if v == "hour" then
+		return os.date("*t",os.time() + 3600)
+	end
+
+	if v == "today" or v == "day" then
+		return os.date("*t",os.time() + 24*3600)
+	end
+
+	if v == "week" then
+		return os.date("*t",os.time() + 7*24*3600)
+	end
+
+	if v == "month" then
+		return os.date("*t",os.time() + 30*24*3600)
+	end
+
+	if v == "year" then
+		return os.date("*t",os.time() + 365*24*3600)
+	end
+
+
 	local t = {}
-	t.year,t.month,t.day,t.hour,t.min,t.sec = tostring(v):match("(....)(..)(..)%s+(..):(..):(..)")
+
+	t.year,t.month,t.day,t.hour,t.min,t.sec = tostring(v):match("(....)(..)(..)[_]+(..):(..):(..)")
 	for k,v in pairs(t) do t[k] = tonumber(v) end
 	t.hour = t.hour or 0
 	t.min = t.min or 0

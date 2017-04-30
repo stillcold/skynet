@@ -16,19 +16,18 @@ local function parseArg()
 
 	for k,v in ipairs(arg) do
 		print(k,v)
-		local _,flag = string.match(v, "(--)(%w)")
+		local _,flag = string.match(v, "([-]+)(%w+)")
 		-- 匹配到了-
 		if _ and flag then
 			lastLlag = trim(flag)
-		end
-
-		if lastLlag then
-			flagTbl[lastLlag] = trim(v)
+			print("lastLlag",lastLlag)
+		elseif lastLlag then
+			flagTbl[lastLlag] = v
 			print(v)
 			lastLlag = nil
+		else
+			optiontbl[v] = true
 		end
-
-		optiontbl[v] = true
 
 	end
 
@@ -46,7 +45,8 @@ local function doArg()
 				dataTbl.cmd = "getAllTask"
 			elseif target == "today" then
 				dataTbl.cmd = "getTodayTask"
-				elseif target == "getMostImportantTask"
+			elseif target == "vip" then
+				dataTbl.cmd = "getMostImportantTask"
 			else
 				dataTbl.cmd = defaulTarget
 			end
@@ -54,15 +54,16 @@ local function doArg()
 			dataTbl.cmd = defaulTarget
 		end
 	elseif optiontbl.add then
+		print("do add")
 		dataTbl = flagTbl
 
 		-- bodyTbl.title, bodyTbl.taskType,bodyTbl.content,bodyTbl.deadline,bodyTbl.priority
 		flagTbl.title = flagTbl.title or "task"
 		flagTbl.taskType = flagTbl.taskType or "todo"
-		flagTbl.deadline = flagTbl.deadline or "20170501"
+		flagTbl.deadline = flagTbl.deadline or "week"
 		flagTbl.priority = flagTbl.priority or "memo"
 
-		if not flagTbl then
+		if not flagTbl.content then
 			print("no content detected")
 			return
 		end
@@ -71,8 +72,55 @@ local function doArg()
 
 	end
 
+	print(json.encode(dataTbl))
 	local res = httpPost("120.24.98.130:6001", json.encode(dataTbl))
-	print(json.encode(dataTbl), res)
+	print(res)
+end
+
+
+local function GetDateFromNumber(v)
+
+	if v == "now" then
+		return os.date("*t",os.time() )
+	end
+
+	if v == "hour" then
+		return os.date("*t",os.time() + 3600)
+	end
+
+	if v == "today" or v == "day" then
+		return os.date("*t",os.time() + 24*3600)
+	end
+
+	if v == "week" then
+		return os.date("*t",os.time() + 7*24*3600)
+	end
+
+	if v == "month" then
+		return os.date("*t",os.time() + 30*24*3600)
+	end
+
+	if v == "year" then
+		return os.date("*t",os.time() + 365*24*3600)
+	end
+
+
+	local t = {}
+
+	t.year,t.month,t.day,t.hour,t.min,t.sec = tostring(v):match("(....)(..)(..)[_]+(..):(..):(..)")
+	for k,v in pairs(t) do t[k] = tonumber(v) end
+	t.hour = t.hour or 0
+	t.min = t.min or 0
+	t.sec = t.sec or 0
+	return t
+end
+
+local deadline = "day"
+local deadlineTime = os.time(GetDateFromNumber(deadline))
+print(deadlineTime)
+
+if not deadlineTime then
+	return
 end
 
 doArg()
