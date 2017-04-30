@@ -2,10 +2,13 @@ local json = require "json"
 
 local function trim(s) return (string.gsub(s, "^%s*(.-)%s*$", "%1"))end
 
-local function httpPost(url, data)
+local function httpPost(url, data, callback)
 	local handle = io.popen("curl -s -X post -d '"..data.."' "..url)
 	local ret = handle:read("*all")
 	io.close()
+	if callback then
+		return callback(ret)
+	end
 	return ret
 end
 
@@ -23,7 +26,7 @@ local function parseArg()
 			print("lastLlag",lastLlag)
 		elseif lastLlag then
 			flagTbl[lastLlag] = v
-			print(v)
+			print("set",lastLlag,v)
 			lastLlag = nil
 		else
 			optiontbl[v] = true
@@ -37,12 +40,20 @@ end
 local function doArg()
 	local optiontbl, flagTbl = parseArg()
 	local dataTbl = {}
+	local callback = nil
 	if optiontbl.get then
 		local defaulTarget = "getAllTask"
-		local target = flagTbl[target]
+		local target = flagTbl.target
 		if target then
 			if target == "all" then
 				dataTbl.cmd = "getAllTask"
+				callback = function(ret)
+					print("all task is ")
+					local allTaskTbl = json.decode(ret)
+					for index,task in pairs(allTaskTbl) do
+						print(index,json.encode(task))
+					end
+				end
 			elseif target == "today" then
 				dataTbl.cmd = "getTodayTask"
 			elseif target == "vip" then
@@ -73,54 +84,12 @@ local function doArg()
 	end
 
 	print(json.encode(dataTbl))
-	local res = httpPost("120.24.98.130:6001", json.encode(dataTbl))
-	print(res)
-end
+	local res = httpPost("120.24.98.130:6001", json.encode(dataTbl), callback)
 
-
-local function GetDateFromNumber(v)
-
-	if v == "now" then
-		return os.date("*t",os.time() )
+	if res then
+		print(res)
 	end
 
-	if v == "hour" then
-		return os.date("*t",os.time() + 3600)
-	end
-
-	if v == "today" or v == "day" then
-		return os.date("*t",os.time() + 24*3600)
-	end
-
-	if v == "week" then
-		return os.date("*t",os.time() + 7*24*3600)
-	end
-
-	if v == "month" then
-		return os.date("*t",os.time() + 30*24*3600)
-	end
-
-	if v == "year" then
-		return os.date("*t",os.time() + 365*24*3600)
-	end
-
-
-	local t = {}
-
-	t.year,t.month,t.day,t.hour,t.min,t.sec = tostring(v):match("(....)(..)(..)[_]+(..):(..):(..)")
-	for k,v in pairs(t) do t[k] = tonumber(v) end
-	t.hour = t.hour or 0
-	t.min = t.min or 0
-	t.sec = t.sec or 0
-	return t
-end
-
-local deadline = "day"
-local deadlineTime = os.time(GetDateFromNumber(deadline))
-print(deadlineTime)
-
-if not deadlineTime then
-	return
 end
 
 doArg()
