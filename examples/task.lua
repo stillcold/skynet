@@ -83,7 +83,7 @@ local function GetDateFromNumber(v)
 	end
 
 	if isSpecialStr then
-		rawDeadline = t.year..t.month..t.day..t.hour..t.min..t.sec
+		rawDeadline = ""..t.year..t.month..t.day.."_"..t.hour..t.min..t.sec
 		return t,rawDeadline
 	end
 
@@ -179,7 +179,7 @@ function actionTbl:addTask(bodyTbl)
 		return "invalidPriority"
 	end
 	
-	deadlineTime,_ = os.time(GetDateFromNumber(deadline))
+	local deadlineTime,_ = os.time(GetDateFromNumber(deadline))
 	if not deadlineTime then
 		return "invalidFormatDeadline,convert fail"
 	end
