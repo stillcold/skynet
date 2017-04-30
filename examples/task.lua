@@ -84,6 +84,7 @@ local function GetDateFromNumber(v)
 
 	if isSpecialStr then
 		rawDeadline = t.year..t.month..t.day..t.hour..t.min..t.sec
+		return t,rawDeadline
 	end
 
 	t.year,t.month,t.day,t.hour,t.min,t.sec = tostring(v):match("(....)(..)(..)[_]+(..):(..):(..)")
@@ -91,7 +92,7 @@ local function GetDateFromNumber(v)
 	t.hour = t.hour or 0
 	t.min = t.min or 0
 	t.sec = t.sec or 0
-	return t,rawDeadline
+	return t
 end
 
 local function _GetTaskTypeValue(taskType)
