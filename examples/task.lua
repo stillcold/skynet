@@ -1,3 +1,17 @@
+------------------------
+-- todo list 管理模块
+-- 	最核心的模块是获取下一个优先级最高的任务，因此需要一个可以精确量化的对任务按照优先级进行估值的约定。
+--	为了防止不必要的麻烦，这个文件中的任务管理基于如下规则：
+--	1、任务优先级有 taskType<"todo","doing","done">、priority<1-10> 、 deadline<dateTime>三个影响因子，优先级最终的结果以Value标志
+--	2、三个因子的影响权重排序为:deadline>taskType>priority
+--	3、deadline有6个区分度:过期，时，天，周，月，年，权重为100
+--	4、taskType有3个区分度:todo,doing,done,权重为10
+--	5、priority有5个区分度:critical,high,normal.low,memo。权重为1
+--	6、优先级最终由以下公式计算得出:
+--		value = V(deadline)*1000+V(taskType)*10+V(priority)
+--		其中:V(deadline)表示根据deadline计算出来的deadline的区分度估值.目前deadline有6个区分度的话，最大的值为5，最小的为1。taskType和priority以此类推
+--
+------------------------
 local skynet = require "skynet"
 local socket = require "socket"
 local httpd = require "http.httpd"
@@ -10,8 +24,11 @@ local string = string
 local taskData = {}
 local actionTbl = {}
 
-local taskTypeTbl = {todo=1, doing=2, done=3}
-local priorityTbl = {critical=1,high=2,normal=3,low=4,memo=5}
+local taskType2Value = {todo=3, doing=2, done=1}
+local priority2Value = {critical=5,high=4,normal=3,low=2,memo=1}
+local taskTypeWeight = 10
+local taskPriorityWeight =1
+local deadlineWeight = 100
 
 local function trim(s) return (string.gsub(s, "^%s*(.-)%s*$", "%1"))end
 
@@ -34,8 +51,74 @@ local function GetDateFromNumber(v)
 	return t
 end
 
+local function _GetTaskTypeValue(taskType)
+	if not taskType then
+		return 0
+	end
+
+	return (taskType2Value[taskType] or 0) * taskTypeWeight
+end
+
+local function _GetTaskPriorityValue(priority)
+	if not priority then
+		return 0
+	end
+
+	return (priority2Value[priority] or 0) * taskPriorityWeight
+end
+
+local function _GetTaskDeadlineValue(deadline)
+	if not deadline then
+		return 0
+	end
+	local nowTime = os.time()
+	local timeOffset = deadline - nowTime
+
+	if timeOffset <= 0 then
+		return 6 * deadlineWeight
+	end
+	if timeOffset < 24 * 3600 then
+		return 5 * deadlineWeight
+	end
+	if timeOffset < 24 * 3600 * 7 then
+		return 4 * deadlineWeight
+	end
+	if timeOffset < 24 * 3600 * 30 then
+		return 3 * deadlineWeight
+	end
+	if timeOffset < 24 * 3600 * 365 then
+		return 2 * deadlineWeight
+	end
+
+	return 1 * deadlineWeight
+
+end
+
+-- 获得当前任务的优先级估值
+local function GetTaskValue(taskIndex)
+	local currentTask = taskData[taskIndex]
+	if not currentTask then
+		return 0
+	end
+
+	return _GetTaskDeadlineValue(currentTask.deadline) + _GetTaskPriorityValue(currentTask.taskType) + _GetTaskPriorityValue(currentTask.priority)
+
+end
+
+
+-- API: 获取当前优先级最高的任务
+function actionTbl:getMostImportantTask()
+	for index,task in pairs(taskData) do
+		task.value = GetTaskValue(index)
+	end
+
+	table.sort(taskData, function(first, second) return first.value > second.value end)
+	return taskData[1]
+end
+
+-- API: 增加一个任务
 function actionTbl:addTask(bodyTbl)
-	local title, taskType, content, deadLine, priority = bodyTbl.title, bodyTbl.taskType,bodyTbl.content,bodyTbl.deadLine,bodyTbl.priority
+	local title, taskType, content, deadline, priority = bodyTbl.title, bodyTbl.taskType,bodyTbl.content,bodyTbl.deadline,bodyTbl.priority
 	if not title then
 		return "invalidTitle"
 	end
@@ -45,29 +128,42 @@ function actionTbl:addTask(bodyTbl)
 	if not content then
 		return "invalidContent"
 	end
-	if not deadLine then
-		return "invalidDeadLine"
+	if not deadline then
+		return "invalidDeadline"
 	end
 	if not priority then
 		return "invalidPriority"
 	end
 	
-	deadLine = os.time(GetDateFromNumber(deadLine))
-	if not deadLine then
-		return "invalidFormatDeadLine,convert fail"
+	deadlineTime = os.time(GetDateFromNumber(deadline))
+	if not deadlineTime then
+		return "invalidFormatDeadline,convert fail"
 	end
-	if not taskTypeTbl[taskType] then
+	if not taskType2Value[taskType] then
 		return "taskType not in defined table"
 	end
-	if not priorityTbl[priority] then
+	if not priority2Value[priority] then
 		return "priority not in defined table"
 	end
 
-	table.insert(taskData, {title = title, content = content, priority = priorityTbl[priority], deadLine = deadLine, taskType = taskTypeTbl[taskType]})
+	table.insert(taskData, {title = title, content = content, priority = priority2Value[priority], deadline = deadlineTime, taskType = taskType2Value[taskType], rawDeadline = deadline})
 	return "addTask done"
 
 end
 
+-- API : 获取今天的所有任务
+function actionTbl:getTodayTask()
+	local retTbl = {}
+	local nowTime = os.time()
+	for index,task in pairs(taskData) do
+		if task.deadline - nowTime <= 24 * 3600 then
+			table.insert(retTbl, task)
+		end
+	end
+	return json.encode(retTbl)
+end
+
+-- API: 获取所有的任务
 function actionTbl:getAllTask()
 	return json.encode(taskData)
 end
