@@ -113,7 +113,7 @@ function actionTbl:getMostImportantTask()
 	end
 
 	table.sort(taskData, function(first, second) return first.value > second.value end)
-	return taskData[1]
+	return json.encode(taskData[1] or {})
 end
 
 -- API: 增加一个任务
