@@ -46,8 +46,11 @@ end
 
 local function GetDateFromNumber(v)
 	local t = {}
-	t.year,t.month,t.day,t.hour,t.min,t.sec = tostring(v):match("(....)-(..)-(..)%s+(..):(..):(..)")
+	t.year,t.month,t.day,t.hour,t.min,t.sec = tostring(v):match("(....)(..)(..)%s+(..):(..):(..)")
 	for k,v in pairs(t) do t[k] = tonumber(v) end
+	t.hour = t.hour or 0
+	t.min = t.min or 0
+	t.sec = t.sec or 0
 	return t
 end
 
