@@ -179,7 +179,8 @@ function actionTbl:addTask(bodyTbl)
 		return "invalidPriority"
 	end
 	
-	local deadlineTime,_ = os.time(GetDateFromNumber(deadline))
+	local timeTbl,newRawStr = GetDateFromNumber(deadline)
+	local deadlineTime = os.time(timeTbl)
 	if not deadlineTime then
 		return "invalidFormatDeadline,convert fail"
 	end
@@ -190,7 +191,7 @@ function actionTbl:addTask(bodyTbl)
 		return "priority not in defined table"
 	end
 
-	table.insert(taskData, {title = title, content = content, priority = priority2Value[priority], deadline = deadlineTime, taskType = taskType2Value[taskType], rawDeadline = _ or deadline})
+	table.insert(taskData, {title = title, content = content, priority = priority2Value[priority], deadline = deadlineTime, taskType = taskType2Value[taskType], rawDeadline = newRawStr or deadline})
 	return "addTask done"
 
 end
