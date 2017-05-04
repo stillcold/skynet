@@ -30,4 +30,4 @@ if "%allparam:~-1%"==" " set "allparam=%allparam:~0,-1%"&goto intercept_right
 
 ::%java% -jar %jarpath% %allparam%
 ::lua m:\tools\task.client.lua %allparam%
-lua task.client.lua %allparam%
+lua D:\mingw_offline_v\mingw\msys\1.0\home\Chao\skynet\shell\task.client.lua %allparam%

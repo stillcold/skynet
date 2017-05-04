@@ -10,8 +10,8 @@ local enumPlatForm = {
 	Maxosx = 5,
 }
 
-local PLATFORM = enumPlatForm.Cygwin
-local CURRENTDIR = [[/home/hzguanchao/workspace/gitRepos/skynet/shell/]]
+local PLATFORM = enumPlatForm.Windows
+local CURRENTDIR = [[D:/mingw_offline_v/mingw/msys/1.0/home/Chao/skynet/shell/]]
 -- ---------------------
 -- config end
 -- ---------------------
@@ -107,10 +107,11 @@ local function doArg(isWindows)
 		dataTbl = flagTbl
 
 		-- bodyTbl.title, bodyTbl.taskType,bodyTbl.content,bodyTbl.deadline,bodyTbl.priority
-		flagTbl.title = flagTbl.title or "task"
-		flagTbl.taskType = flagTbl.taskType or "todo"
-		flagTbl.deadline = flagTbl.deadline or "week"
-		flagTbl.priority = flagTbl.priority or "memo"
+		flagTbl.title = flagTbl.title or flagTbl.i or "task"
+		flagTbl.taskType = flagTbl.taskType or flagTbl.t or "todo"
+		flagTbl.deadline = flagTbl.deadline or flagTbl.d or "week"
+		flagTbl.priority = flagTbl.priority or flagTbl.p or "memo"
+		flagTbl.content = flagTbl.content or flagTbl.c
 
 		if not flagTbl.content then
 			print([[task add <--content (str)> 
@@ -128,7 +129,9 @@ local function doArg(isWindows)
 	local toPostData = json.encode(dataTbl)
 	if PLATFORM == enumPlatForm.Windows then
 		toPostData = string.gsub(toPostData, '"', [[\"]])
+		toPostData = string.gsub(toPostData, ' ', [[_]])
 	end
+	print(toPostData)
 	local res = httpPost("120.24.98.130:6001", toPostData, callback)
 
 	if res then
