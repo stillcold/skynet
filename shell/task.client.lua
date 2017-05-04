@@ -1,15 +1,20 @@
+--package.path = package.path .. ";c:/luaclass/?.lua"
 local json = require "json"
 
 local function trim(s) return (string.gsub(s, "^%s*(.-)%s*$", "%1"))end
 
 local function httpPost(url, data, callback)
-	local handle = io.popen("curl -s -X post -d '"..data.."' "..url)
-	local ret = handle:read("*all")
+	local handle = io.popen("curl -s -X post --data "..data.." "..url)
+	local ret = handle:read("*a")
 	io.close()
 	if callback then
 		return callback(ret)
 	end
 	return ret
+end
+
+local function is_platform_windows()
+    return "\\" == package.config:sub(1,1)
 end
 
 local function parseArg()
@@ -18,15 +23,15 @@ local function parseArg()
 	local lastLlag = nil
 
 	for k,v in ipairs(arg) do
-		print(k,v)
+		--print(k,v)
 		local _,flag = string.match(v, "([-]+)(%w+)")
 		-- 匹配到了-
 		if _ and flag then
 			lastLlag = trim(flag)
-			print("lastLlag",lastLlag)
+			--print("lastLlag",lastLlag)
 		elseif lastLlag then
 			flagTbl[lastLlag] = v
-			print("set",lastLlag,v)
+			--print("set",lastLlag,v)
 			lastLlag = nil
 		else
 			optiontbl[v] = true
@@ -37,7 +42,8 @@ local function parseArg()
 	return optiontbl, flagTbl
 end
 
-local function doArg()
+local function doArg(isWindows)
+
 	local optiontbl, flagTbl = parseArg()
 	local dataTbl = {}
 	local callback = nil
@@ -65,7 +71,7 @@ local function doArg()
 			dataTbl.cmd = defaulTarget
 		end
 	elseif optiontbl.add then
-		print("do add")
+		--print("do add")
 		dataTbl = flagTbl
 
 		-- bodyTbl.title, bodyTbl.taskType,bodyTbl.content,bodyTbl.deadline,bodyTbl.priority
@@ -75,7 +81,11 @@ local function doArg()
 		flagTbl.priority = flagTbl.priority or "memo"
 
 		if not flagTbl.content then
-			print("no content detected")
+			print([[task add <--content (str)> 
+	[--title (str)] 
+	[--taskType (todo/doing/done)] 
+	[--deadline (week/day/now/month/year/20170501/20170501_14:23:58)] 
+	[--priority (critical/high/normal/low/memo)]  ]])
 			return
 		end
 
@@ -83,8 +93,13 @@ local function doArg()
 
 	end
 
-	print(json.encode(dataTbl))
-	local res = httpPost("120.24.98.130:6001", json.encode(dataTbl), callback)
+	local toPostData = json.encode(dataTbl)
+	if isWindows then
+		--print("is windows")
+		toPostData = string.gsub(toPostData, '"', [[\"]])
+	end
+	--print(toPostData)
+	local res = httpPost("120.24.98.130:6001", toPostData, callback)
 
 	if res then
 		print(res)
@@ -92,4 +107,5 @@ local function doArg()
 
 end
 
-doArg()
+local IS_WINDOWS = is_platform_windows()
+doArg(IS_WINDOWS)

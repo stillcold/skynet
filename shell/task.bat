@@ -29,4 +29,5 @@ if "%allparam:~-1%"==" " set "allparam=%allparam:~0,-1%"&goto intercept_right
 :eof
 
 ::%java% -jar %jarpath% %allparam%
+::lua m:\tools\task.client.lua %allparam%
 lua task.client.lua %allparam%
