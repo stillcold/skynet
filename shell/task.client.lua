@@ -1,20 +1,47 @@
 --package.path = package.path .. ";c:/luaclass/?.lua"
+-- ---------------------
+-- config
+-- ---------------------
+local enumPlatForm = {
+	Linux = 1,
+	Windows = 2,
+	Cygwin = 3,
+	Mingw = 4,
+	Maxosx = 5,
+}
+
+local PLATFORM = enumPlatForm.Cygwin
+local CURRENTDIR = [[/home/hzguanchao/workspace/gitRepos/skynet/shell/]]
+-- ---------------------
+-- config end
+-- ---------------------
+
+package.path = package.path .. ";"..CURRENTDIR.."?.lua"
 local json = require "json"
 
 local function trim(s) return (string.gsub(s, "^%s*(.-)%s*$", "%1"))end
 
 local function httpPost(url, data, callback)
-	local handle = io.popen("curl -s -X post --data "..data.." "..url)
-	local ret = handle:read("*a")
+	local ret
+
+	if PLATFORM == enumPlatForm.Cygwin or PLATFORM == enumPlatForm.Mingw then
+		local orderStr = "curl -s -X post -d '"..data.."' "..url
+		os.execute(orderStr)
+		-- 这个函数返回的是状态码,根本拿不到真正的执行结果
+		return
+	elseif PLATFORM == enumPlatForm.Linux or PLATFORM == enumPlatForm.Macosx then
+		--todo
+		local handle = io.popen("curl -s -X post --data '"..data.."' "..url)
+		ret = handle:read("*a")
+	else
+		local handle = io.popen("curl -s -X post --data "..data.." "..url)
+		ret = handle:read("*a")
+	end
 	io.close()
 	if callback then
 		return callback(ret)
 	end
 	return ret
-end
-
-local function is_platform_windows()
-    return "\\" == package.config:sub(1,1)
 end
 
 local function parseArg()
@@ -28,11 +55,16 @@ local function parseArg()
 		-- 匹配到了-
 		if _ and flag then
 			lastLlag = trim(flag)
-			--print("lastLlag",lastLlag)
+			print("lastLlag",lastLlag)
 		elseif lastLlag then
-			flagTbl[lastLlag] = v
+			if flagTbl[lastLlag] then
+				flagTbl[lastLlag] = flagTbl[lastLlag].." "..v
+			else
+				flagTbl[lastLlag] = v
+			end
+			
 			--print("set",lastLlag,v)
-			lastLlag = nil
+			--lastLlag = nil
 		else
 			optiontbl[v] = true
 		end
@@ -49,7 +81,7 @@ local function doArg(isWindows)
 	local callback = nil
 	if optiontbl.get then
 		local defaulTarget = "getAllTask"
-		local target = flagTbl.target
+		local target = flagTbl.target or flagTbl.t
 		if target then
 			if target == "all" then
 				dataTbl.cmd = "getAllTask"
@@ -94,11 +126,9 @@ local function doArg(isWindows)
 	end
 
 	local toPostData = json.encode(dataTbl)
-	if isWindows then
-		--print("is windows")
+	if PLATFORM == enumPlatForm.Windows then
 		toPostData = string.gsub(toPostData, '"', [[\"]])
 	end
-	--print(toPostData)
 	local res = httpPost("120.24.98.130:6001", toPostData, callback)
 
 	if res then
@@ -107,5 +137,9 @@ local function doArg(isWindows)
 
 end
 
-local IS_WINDOWS = is_platform_windows()
-doArg(IS_WINDOWS)
+local function is_platform_windows()
+    return "\\" == package.config:sub(1,1)
+end
+--local IS_WINDOWS = is_platform_windows()
+
+doArg()

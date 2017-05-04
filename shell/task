@@ -1,1 +1,1 @@
-lua task.client.lua $@
+lua /home/hzguanchao/workspace/gitRepos/skynet/shell/task.client.lua $@
