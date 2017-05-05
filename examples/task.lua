@@ -241,7 +241,7 @@ end
 -- API: 标记任务为完成状态
 function actionTbl:finishTask(index)
 	local task = taskData[index]
-	if not index then
+	if not task then
 		return "no task found"
 	end
 
@@ -250,7 +250,8 @@ function actionTbl:finishTask(index)
 end
 
 -- API: 取消任务
-function actionTbl:deleteTask(index)
+function actionTbl:deleteTask(bodyTbl)
+	local index = bodyTbl.index
 	local task = taskData[index]
 	if not index then
 		return "no task found"

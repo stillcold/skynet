@@ -123,6 +123,13 @@ local function doArg(isWindows)
 		end
 
 		dataTbl.cmd = "addTask"
+	elseif optiontbl.done then
+		dataTbl.cmd = "finishTask"
+		dataTbl.index = flagTbl.index or flagTbl.i
+		if not dataTbl.index then
+			print([[task done <--index (number)> ]])
+			return
+		end
 
 	end
 
