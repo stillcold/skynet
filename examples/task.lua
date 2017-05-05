@@ -26,6 +26,9 @@ local actionTbl = {}
 
 local taskType2Value = {todo=3, doing=2, done=1}
 local priority2Value = {critical=5,high=4,normal=3,low=2,memo=1}
+local value2TaskType = {done, doing, todo}
+local value2Priority = {memo, low, critical, normal, high}
+
 local taskTypeWeight = 10
 local taskPriorityWeight =1
 local deadlineWeight = 100
@@ -44,6 +47,21 @@ local function response(id, ...)
 	end
 end
 
+local function copytbl(ori)
+	if not ori then
+		return nil
+	end
+
+	if type(ori) ~= "table" then
+		return ori
+	end
+
+	local copy = {}
+	for k,v in pairs(ori) do
+		copy[k] = copytbl(v)
+	end
+	return copy
+end
 
 -- 20170501_13:46:59
 local function GetDateFromNumber(v)
@@ -210,7 +228,14 @@ end
 
 -- API: 获取所有的任务
 function actionTbl:getAllTask()
-	return json.encode(taskData)
+	local data = copytbl(taskData)
+	for index,task in pairs(data) do
+		task.priority = value2Priority[task.priority]
+		task.taskType = value2TaskType[task.taskType]
+		task.rawDeadline = nil
+		task.value = nil
+	end
+	return json.encode(data)
 end
 
 -- API: 标记任务为完成状态
@@ -222,6 +247,17 @@ function actionTbl:finishTask(index)
 
 	task.taskType = taskType2Value.done
 	return "set done"
+end
+
+-- API: 取消任务
+function actionTbl:deleteTask(index)
+	local task = taskData[index]
+	if not index then
+		return "no task found"
+	end
+
+	taskData[index] = nil
+	return "delete done"
 end
 
 skynet.start(function()
