@@ -252,8 +252,12 @@ end
 -- API: 取消任务
 function actionTbl:deleteTask(bodyTbl)
 	local index = bodyTbl.index
-	local task = taskData[index]
+	index = tonumber(index)
 	if not index then
+		return "invalid index"
+	end
+	local task = taskData[index]
+	if not task then
 		return "no task found"
 	end
 
