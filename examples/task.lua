@@ -213,6 +213,17 @@ function actionTbl:getAllTask()
 	return json.encode(taskData)
 end
 
+-- API: 标记任务为完成状态
+function actionTbl:finishTask(index)
+	local task = taskData[index]
+	if not index then
+		return "no task found"
+	end
+
+	task.taskType = taskType2Value.done
+	return "set done"
+end
+
 skynet.start(function()
 	skynet.dispatch("lua", function (_,_,id)
 		socket.start(id)
