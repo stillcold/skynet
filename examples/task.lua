@@ -239,7 +239,7 @@ function actionTbl:getAllTask()
 end
 
 -- API: 标记任务为完成状态
-function actionTbl:finishTask(index)
+function actionTbl:finishTask(bodyTbl)
 	local index = bodyTbl.index
 	index = tonumber(index)
 	if not index then
