@@ -240,6 +240,12 @@ end
 
 -- API: 标记任务为完成状态
 function actionTbl:finishTask(index)
+	local index = bodyTbl.index
+	index = tonumber(index)
+	if not index then
+		return "invalid index"
+	end
+
 	local task = taskData[index]
 	if not task then
 		return "no task found"
