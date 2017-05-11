@@ -278,7 +278,8 @@ function actionTbl:deleteTask(bodyTbl)
 		return "no task found"
 	end
 
-	taskData[index] = nil
+	table.remove(taskData,index)
+
 	return "delete done"
 end
 
