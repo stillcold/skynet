@@ -243,7 +243,7 @@ function actionTbl:getAllTask()
 		task.priority = value2Priority[task.priority] or task.priority
 		task.taskType = value2TaskType[task.taskType] or task.taskType
 		task.index = index
-		task.rawDeadline = nil
+		task.deadline = nil
 		task.value = nil
 	end
 	return json.encode(data)
