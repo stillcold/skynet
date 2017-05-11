@@ -26,8 +26,8 @@ local actionTbl = {}
 
 local taskType2Value = {todo=3, doing=2, done=1}
 local priority2Value = {critical=5,high=4,normal=3,low=2,memo=1}
-local value2TaskType = {done, doing, todo}
-local value2Priority = {memo, low, critical, normal, high}
+local value2TaskType = {"done", "doing", "todo"}
+local value2Priority = {"memo", "low", "critical", "normal", "high"}
 
 local taskTypeWeight = 10
 local taskPriorityWeight =1
@@ -184,7 +184,7 @@ function actionTbl:getMostImportantTask()
 
 	local data = copytbl(taskData[1])
 	data.index = 1
-	
+
 	return json.encode(data or {})
 end
 
