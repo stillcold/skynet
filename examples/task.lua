@@ -169,7 +169,7 @@ local function GetTaskValue(taskIndex)
 		return 0
 	end
 
-	return _GetTaskDeadlineValue(currentTask.deadline) + _GetTaskPriorityValue(currentTask.taskType) + _GetTaskPriorityValue(currentTask.priority)
+	return _GetTaskDeadlineValue(currentTask.deadline) + _GetTaskTypeValue(currentTask.taskType) + _GetTaskPriorityValue(currentTask.priority)
 
 end
 
