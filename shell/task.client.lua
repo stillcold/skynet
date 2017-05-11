@@ -113,6 +113,21 @@ local function doArg(isWindows)
 		flagTbl.priority = flagTbl.priority or flagTbl.p or "memo"
 		flagTbl.content = flagTbl.content or flagTbl.c
 
+		flagTbl.hour = flagTbl.hour or flagTbl.h
+		if flagTbl.hour then
+			flagTbl.deadline = tostring(os.time() + tonumber(flagTbl.hour) * 3600)
+		end
+
+		flagTbl.second = flagTbl.second or flagTbl.s
+		if flagTbl.second then
+			flagTbl.deadline = tostring(os.time() + tonumber(flagTbl.second))
+		end
+
+		flagTbl.minute = flagTbl.minute or flagTbl.m
+		if flagTbl.minute then
+			flagTbl.deadline = tostring(os.time() + tonumber(flagTbl.minute) % 60)
+		end
+
 		if not flagTbl.content then
 			print([[task add <--content (str)> 
 	[--title (str)] 

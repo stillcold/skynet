@@ -100,6 +100,12 @@ local function GetDateFromNumber(v)
 		isSpecialStr = true
 	end
 
+	local v_number = tonumber(v)
+	if v_number and v_number > 0 then
+		t = os.date("*t",os.time() + v_number)
+		isSpecialStr = true
+	end
+
 	if isSpecialStr then
 		rawDeadline = ""..t.year.."-"..t.month.."-"..t.day.."_"..t.hour..":"..t.min..":"..t.sec
 		return t,rawDeadline
