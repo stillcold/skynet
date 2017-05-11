@@ -102,7 +102,7 @@ local function GetDateFromNumber(v)
 
 	local v_number = tonumber(v)
 	if v_number and v_number > 0 then
-		t = os.date("*t",os.time() + v_number)
+		t = os.date("*t",v_number)
 		isSpecialStr = true
 	end
 
@@ -181,7 +181,11 @@ function actionTbl:getMostImportantTask()
 	end
 
 	table.sort(taskData, function(first, second) return first.value > second.value end)
-	return json.encode(taskData[1] or {})
+
+	local data = copytbl(taskData[1])
+	data.index = 1
+	
+	return json.encode(data or {})
 end
 
 -- API: 增加一个任务
@@ -236,8 +240,9 @@ end
 function actionTbl:getAllTask()
 	local data = copytbl(taskData)
 	for index,task in pairs(data) do
-		task.priority = value2Priority[task.priority]
-		task.taskType = value2TaskType[task.taskType]
+		task.priority = value2Priority[task.priority] or task.priority
+		task.taskType = value2TaskType[task.taskType] or task.taskType
+		task.index = index
 		task.rawDeadline = nil
 		task.value = nil
 	end
