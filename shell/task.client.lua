@@ -130,7 +130,16 @@ local function doArg(isWindows)
 			print([[task done <--index (number)> ]])
 			return
 		end
+		dataTbl.index = tostring(dataTbl.index)
 
+	elseif optiontbl.delete then
+		dataTbl.cmd = "deleteTask"
+		dataTbl.index = flagTbl.index or flagTbl.i
+		if not dataTbl.index then
+			print([[task done <--index (number)> ]])
+			return
+		end
+		dataTbl.index = tostring(dataTbl.index)
 	end
 
 	local toPostData = json.encode(dataTbl)
