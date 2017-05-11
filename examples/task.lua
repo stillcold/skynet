@@ -8,7 +8,7 @@
 --	4、taskType有3个区分度:todo,doing,done,权重为10
 --	5、priority有5个区分度:critical,high,normal.low,memo。权重为1
 --	6、优先级最终由以下公式计算得出:
---		value = V(deadline)*1000+V(taskType)*10+V(priority)
+--		value = V(deadline)*1000+V(taskType)*1000+V(priority)
 --		其中:V(deadline)表示根据deadline计算出来的deadline的区分度估值.目前deadline有6个区分度的话，最大的值为5，最小的为1。taskType和priority以此类推
 --
 ------------------------
@@ -29,7 +29,7 @@ local priority2Value = {critical=5,high=4,normal=3,low=2,memo=1}
 local value2TaskType = {"done", "doing", "todo"}
 local value2Priority = {"memo", "low", "critical", "normal", "high"}
 
-local taskTypeWeight = 10
+local taskTypeWeight = 1000
 local taskPriorityWeight =1
 local deadlineWeight = 100
 
