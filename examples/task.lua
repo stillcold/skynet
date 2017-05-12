@@ -124,7 +124,7 @@ local function _GetTaskTypeValue(taskType)
 		return 0
 	end
 
-	return (taskType2Value[taskType] or 0) * taskTypeWeight
+	return (taskType or 0) * taskTypeWeight
 end
 
 local function _GetTaskPriorityValue(priority)
@@ -132,7 +132,7 @@ local function _GetTaskPriorityValue(priority)
 		return 0
 	end
 
-	return (priority2Value[priority] or 0) * taskPriorityWeight
+	return (priority or 0) * taskPriorityWeight
 end
 
 local function _GetTaskDeadlineValue(deadline)
@@ -169,7 +169,6 @@ local function GetTaskValue(taskIndex)
 		return 0
 	end
 
-	print(currentTask.deadline, _GetTaskDeadlineValue(currentTask.deadline), currentTask.taskType, _GetTaskTypeValue(currentTask.taskType), currentTask.priority, _GetTaskPriorityValue(currentTask.priority))
 	return _GetTaskDeadlineValue(currentTask.deadline) + _GetTaskTypeValue(currentTask.taskType) + _GetTaskPriorityValue(currentTask.priority)
 
 end
