@@ -85,34 +85,75 @@ local function doArg(isWindows)
 			if target == "all" then
 				dataTbl.cmd = "getAllTask"
 				callback = function(ret)
-					print("all task is ")
+					print("\nAll task is: \n")
 					local allTaskTbl = json.decode(ret)
 					for index,task in pairs(allTaskTbl) do
-						print(index,json.encode(task))
+						local taskData = task
+						if taskData then
+							print("\t"..index..":")
+							print("\t",taskData.taskType)
+							print("\t",taskData.title)
+							print("\t",taskData.content)
+							print("\t",taskData.priority)
+							print("\t",taskData.rawDeadline)
+							print("\t","_____________________\n")
+						end
 					end
 				end
 			elseif target == "today" then
 				dataTbl.cmd = "getTodayTask"
+
+				callback = function(ret)
+					print("\nTask in 24 hours is: \n")
+					local allTaskTbl = json.decode(ret)
+					for index,task in pairs(allTaskTbl) do
+						local taskData = task
+						if taskData then
+							print("\t"..index..":")
+							print("\t",taskData.taskType)
+							print("\t",taskData.title)
+							print("\t",taskData.content)
+							print("\t",taskData.priority)
+							print("\t",taskData.rawDeadline)
+							print("\t","_____________________\n")
+						end
+
+					end
+				end
+
 			elseif target == "vip" then
 				dataTbl.cmd = "getMostImportantTask"
+
+				callback = function(ret)
+					print("\nMost important task is: \n")
+					local taskData = json.decode(ret)
+					if taskData and taskData.title then
+						print("\t",taskData.taskType)
+						print("\t",taskData.title)
+						print("\t",taskData.content)
+						print("\t",taskData.priority)
+						print("\t",taskData.rawDeadline)
+						print("\t","_____________________\n")
+					end
+				end
 			else
 				dataTbl.cmd = defaulTarget
 			end
 		else
 			dataTbl.cmd = defaulTarget
 			callback = function(ret)
-				print("all task is ")
+				print("\nAll task is: \n")
 				local allTaskTbl = json.decode(ret)
 				for index,task in pairs(allTaskTbl) do
-					local taskData = json.encode(task)
+					local taskData = task
 					if taskData then
-						print("_____________________")
-						print(index,":")
+						print("\t"..index..":")
+						print("\t",taskData.taskType)
 						print("\t",taskData.title)
 						print("\t",taskData.content)
-						print("\t",taskData.taskType)
 						print("\t",taskData.priority)
 						print("\t",taskData.rawDeadline)
+						print("\t","_____________________\n")
 					end
 					
 				end
@@ -171,6 +212,7 @@ local function doArg(isWindows)
 			return
 		end
 		dataTbl.index = tostring(dataTbl.index)
+
 	end
 
 	local toPostData = json.encode(dataTbl)
@@ -178,6 +220,7 @@ local function doArg(isWindows)
 		toPostData = string.gsub(toPostData, '"', [[\"]])
 		toPostData = string.gsub(toPostData, ' ', [[_]])
 	end
+	--print(toPostData)
 	local res = httpPost("120.24.98.130:6001", toPostData, callback)
 
 	if res then
