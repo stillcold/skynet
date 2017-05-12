@@ -29,7 +29,7 @@ local priority2Value = {critical=5,high=4,normal=3,low=2,memo=1}
 local value2TaskType = {"done", "doing", "todo"}
 local value2Priority = {"memo", "low", "critical", "normal", "high"}
 
-local taskTypeWeight = 1000
+local taskTypeWeight = 10000
 local taskPriorityWeight =1
 local deadlineWeight = 100
 
@@ -142,7 +142,40 @@ local function _GetTaskDeadlineValue(deadline)
 	local nowTime = os.time()
 	local timeOffset = deadline - nowTime
 
-	if timeOffset <= 0 then
+	if timeOffset < 0 then
+		return 19 * deadlineWeight
+	end
+	if timeOffset == 0 then
+		return 15 * deadlineWeight
+	end
+	if timeOffset < 60 then
+		return 14 * deadlineWeight
+	end
+	if timeOffset < 300 then
+		return 13 * deadlineWeight
+	end
+	if timeOffset < 600 then
+		return 13 * deadlineWeight
+	end
+	if timeOffset < 0.5 * 3600 then
+		return 12 * deadlineWeight
+	end
+	if timeOffset < 1 * 3600 then
+		return 11 * deadlineWeight
+	end
+	if timeOffset < 2 * 3600 then
+		return 10 * deadlineWeight
+	end
+	if timeOffset < 3 * 3600 then
+		return 9 * deadlineWeight
+	end
+	if timeOffset < 4 * 3600 then
+		return 8 * deadlineWeight
+	end
+	if timeOffset < 5 * 3600 then
+		return 7 * deadlineWeight
+	end
+	if timeOffset < 6 * 3600 then
 		return 6 * deadlineWeight
 	end
 	if timeOffset < 24 * 3600 then
