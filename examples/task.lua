@@ -217,6 +217,8 @@ function actionTbl:getMostImportantTask()
 
 	local data = copytbl(taskData[1])
 	data.index = 1
+	data.priority = value2Priority[data.priority] or data.priority
+	data.taskType = value2TaskType[data.taskType] or data.taskType
 
 	return json.encode(data or {})
 end
@@ -263,7 +265,11 @@ function actionTbl:getTodayTask()
 	local nowTime = os.time()
 	for index,task in pairs(taskData) do
 		if task.deadline - nowTime <= 24 * 3600 then
-			table.insert(retTbl, task)
+			local data = copytbl(task)
+			data.index = index
+			data.priority = value2Priority[data.priority] or data.priority
+			data.taskType = value2TaskType[data.taskType] or data.taskType
+			table.insert(retTbl, data)
 		end
 	end
 	return json.encode(retTbl)

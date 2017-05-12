@@ -55,7 +55,6 @@ local function parseArg()
 		-- 匹配到了-
 		if _ and flag then
 			lastLlag = trim(flag)
-			print("lastLlag",lastLlag)
 		elseif lastLlag then
 			if flagTbl[lastLlag] then
 				flagTbl[lastLlag] = flagTbl[lastLlag].." "..v
@@ -101,6 +100,23 @@ local function doArg(isWindows)
 			end
 		else
 			dataTbl.cmd = defaulTarget
+			callback = function(ret)
+				print("all task is ")
+				local allTaskTbl = json.decode(ret)
+				for index,task in pairs(allTaskTbl) do
+					local taskData = json.encode(task)
+					if taskData then
+						print("_____________________")
+						print(index,":")
+						print("\t",taskData.title)
+						print("\t",taskData.content)
+						print("\t",taskData.taskType)
+						print("\t",taskData.priority)
+						print("\t",taskData.rawDeadline)
+					end
+					
+				end
+			end
 		end
 	elseif optiontbl.add then
 		--print("do add")
@@ -162,7 +178,6 @@ local function doArg(isWindows)
 		toPostData = string.gsub(toPostData, '"', [[\"]])
 		toPostData = string.gsub(toPostData, ' ', [[_]])
 	end
-	print(toPostData)
 	local res = httpPost("120.24.98.130:6001", toPostData, callback)
 
 	if res then
