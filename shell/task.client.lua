@@ -203,6 +203,14 @@ local function doArg(isWindows)
 			return
 		end
 		dataTbl.index = tostring(dataTbl.index)
+	elseif optiontbl.doing then
+		dataTbl.cmd = "onTask"
+		dataTbl.index = flagTbl.index or flagTbl.i
+		if not dataTbl.index then
+			print([[task done <--index (number)> ]])
+			return
+		end
+		dataTbl.index = tostring(dataTbl.index)
 
 	elseif optiontbl.delete then
 		dataTbl.cmd = "deleteTask"

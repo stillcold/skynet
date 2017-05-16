@@ -24,9 +24,9 @@ local string = string
 local taskData = {}
 local actionTbl = {}
 
-local taskType2Value = {todo=3, doing=2, done=1}
+local taskType2Value = {todo=2, doing=3, done=1}
 local priority2Value = {critical=5,high=4,normal=3,low=2,memo=1}
-local value2TaskType = {"done", "doing", "todo"}
+local value2TaskType = {"done", "todo", "doing"}
 local value2Priority = {"memo", "low", "critical", "normal", "high"}
 
 local taskTypeWeight = 10000
@@ -302,6 +302,23 @@ function actionTbl:finishTask(bodyTbl)
 	end
 
 	task.taskType = taskType2Value.done
+	return "set done"
+end
+
+-- API: 标记任务为doing状态
+function actionTbl:onTask(bodyTbl)
+	local index = bodyTbl.index
+	index = tonumber(index)
+	if not index then
+		return "invalid index"
+	end
+
+	local task = taskData[index]
+	if not task then
+		return "no task found"
+	end
+
+	task.taskType = taskType2Value.doing
 	return "set done"
 end
 
