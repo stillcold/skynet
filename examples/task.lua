@@ -220,6 +220,12 @@ function actionTbl:getMostImportantTask()
 	data.priority = value2Priority[data.priority] or data.priority
 	data.taskType = value2TaskType[data.taskType] or data.taskType
 
+	if task.subtask then
+		for _,subtask in ipairs(task.subtask) do
+			subtask.taskType = value2TaskType[subtask.taskType] or subtask.taskType
+		end
+	end
+
 	return json.encode(data or {})
 end
 
@@ -269,6 +275,13 @@ function actionTbl:getTodayTask()
 			data.index = index
 			data.priority = value2Priority[data.priority] or data.priority
 			data.taskType = value2TaskType[data.taskType] or data.taskType
+
+			if task.subtask then
+				for _,subtask in ipairs(task.subtask) do
+					subtask.taskType = value2TaskType[subtask.taskType] or subtask.taskType
+				end
+			end
+
 			table.insert(retTbl, data)
 		end
 	end
@@ -284,6 +297,11 @@ function actionTbl:getAllTask()
 		task.index = index
 		task.deadline = nil
 		task.value = nil
+		if task.subtask then
+			for _,subtask in ipairs(task.subtask) do
+				subtask.taskType = value2TaskType[subtask.taskType] or subtask.taskType
+			end
+		end
 	end
 	return json.encode(data)
 end
@@ -424,7 +442,7 @@ function actionTbl:setSubTaskStatus(bodyTbl)
 
 	subTask.status = status
 
-	return "delete done"
+	return "set done"
 end
 
 skynet.start(function()

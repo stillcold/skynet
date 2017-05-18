@@ -150,9 +150,12 @@ local function doArg(isWindows)
 						print("\t",taskData.title)
 						print("\t",taskData.taskType.."\t"..taskData.priority.."\t"..taskData.rawDeadline)
 						print("\t",taskData.content)
-						for i,subTask in ipairs(taskData.subTask) do
-							print("\t\t",i..":"..subTask.content.." "..subTask.status)
+						if taskData.subTask then
+							for i,subTask in ipairs(taskData.subTask) do
+								print("\t\t",i..":"..subTask.content.." "..subTask.status)
+							end
 						end
+						
 						print("\t","_____________________\n")
 					end
 					
@@ -250,7 +253,29 @@ local function doArg(isWindows)
 		end
 		dataTbl.index = tostring(dataTbl.index)
 		dataTbl.subIndex = flagTbl.subIndex or flagTbl.s
-		dataTbl.status = flagTbl.taskType or flagTbl.t 
+		dataTbl.status = flagTbl.taskType or flagTbl.t or "done"
+	elseif optiontbl.subdoing then
+		dataTbl.cmd = "setSubTaskStatus"
+		dataTbl.status = "doing"
+		dataTbl.index = flagTbl.index or flagTbl.i
+		if not dataTbl.index then
+			print([[task addSub <--index (number)> ]])
+			return
+		end
+		dataTbl.index = tostring(dataTbl.index)
+		dataTbl.subIndex = flagTbl.subIndex or flagTbl.s
+	
+	elseif optiontbl.subdone then
+		dataTbl.cmd = "setSubTaskStatus"
+		dataTbl.status = "done"
+		dataTbl.index = flagTbl.index or flagTbl.i
+		if not dataTbl.index then
+			print([[task addSub <--index (number)> ]])
+			return
+		end
+		dataTbl.index = tostring(dataTbl.index)
+		dataTbl.subIndex = flagTbl.subIndex or flagTbl.s
+
 	end
 
 	local toPostData = json.encode(dataTbl)
@@ -258,7 +283,7 @@ local function doArg(isWindows)
 		toPostData = string.gsub(toPostData, '"', [[\"]])
 		toPostData = string.gsub(toPostData, ' ', [[_]])
 	end
-	print(toPostData)
+	--print(toPostData)
 	local res = httpPost("120.24.98.130:6001", toPostData, callback)
 
 	if res then
