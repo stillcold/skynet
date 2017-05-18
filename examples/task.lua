@@ -351,7 +351,7 @@ function actionTbl:addSubTask(bodyTbl)
 		return "no task found"
 	end
 
-	local content = bodyTbl.subTask
+	local content = bodyTbl.content
 	if not content then
 		return "no sub task"
 	end
@@ -366,7 +366,7 @@ function actionTbl:addSubTask(bodyTbl)
 end
 
 -- API: 删除子任务
-function actionTbl:addSubTask(bodyTbl)
+function actionTbl:deleteSubTask(bodyTbl)
 	local index = bodyTbl.index
 	index = tonumber(index)
 	if not index then

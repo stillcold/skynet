@@ -218,6 +218,16 @@ local function doArg(isWindows)
 		end
 		dataTbl.index = tostring(dataTbl.index)
 
+	elseif optiontbl.addsub then
+		dataTbl.cmd = "addSubTask"
+		dataTbl.index = flagTbl.index or flagTbl.i
+		if not dataTbl.index then
+			print([[task addSub <--index (number)> ]])
+			return
+		end
+		dataTbl.index = tostring(dataTbl.index)
+		dataTbl.subTask = flagTbl.content or flagTbl.c
+
 	end
 
 	local toPostData = json.encode(dataTbl)
@@ -225,7 +235,7 @@ local function doArg(isWindows)
 		toPostData = string.gsub(toPostData, '"', [[\"]])
 		toPostData = string.gsub(toPostData, ' ', [[_]])
 	end
-	--print(toPostData)
+	print(toPostData)
 	local res = httpPost("120.24.98.130:6001", toPostData, callback)
 
 	if res then
