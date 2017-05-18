@@ -222,7 +222,7 @@ function actionTbl:getMostImportantTask()
 
 	if data.subtask then
 		for _,subtask in ipairs(data.subtask) do
-			subtask.taskType = value2TaskType[subtask.taskType] or subtask.taskType
+			subtask.status = value2TaskType[subtask.status] or subtask.status
 		end
 	end
 
@@ -278,7 +278,7 @@ function actionTbl:getTodayTask()
 
 			if data.subtask then
 				for _,subtask in ipairs(data.subtask) do
-					subtask.taskType = value2TaskType[subtask.taskType] or subtask.taskType
+					subtask.status = value2TaskType[subtask.status] or subtask.status
 				end
 			end
 
@@ -299,7 +299,7 @@ function actionTbl:getAllTask()
 		task.value = nil
 		if task.subtask then
 			for _,subtask in ipairs(task.subtask) do
-				subtask.taskType = value2TaskType[subtask.taskType] or subtask.taskType
+				subtask.status = value2TaskType[subtask.status] or subtask.status
 			end
 		end
 	end
