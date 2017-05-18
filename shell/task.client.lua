@@ -150,6 +150,9 @@ local function doArg(isWindows)
 						print("\t",taskData.title)
 						print("\t",taskData.taskType.."\t"..taskData.priority.."\t"..taskData.rawDeadline)
 						print("\t",taskData.content)
+						for i,subTask in ipairs(taskData.subTask) do
+							print("\t\t",i..":"..subTask.content.." "..subTask.status)
+						end
 						print("\t","_____________________\n")
 					end
 					
@@ -218,7 +221,7 @@ local function doArg(isWindows)
 		end
 		dataTbl.index = tostring(dataTbl.index)
 
-	elseif optiontbl.addsub then
+	elseif optiontbl.subadd then
 		dataTbl.cmd = "addSubTask"
 		dataTbl.index = flagTbl.index or flagTbl.i
 		if not dataTbl.index then
@@ -226,8 +229,28 @@ local function doArg(isWindows)
 			return
 		end
 		dataTbl.index = tostring(dataTbl.index)
-		dataTbl.subTask = flagTbl.content or flagTbl.c
+		dataTbl.content = flagTbl.content or flagTbl.c
 
+	elseif optiontbl.subdelete or optiontbl.subdel then
+		dataTbl.cmd = "deleteSubTask"
+		dataTbl.index = flagTbl.index or flagTbl.i
+		if not dataTbl.index then
+			print([[task addSub <--index (number)> ]])
+			return
+		end
+		dataTbl.index = tostring(dataTbl.index)
+		dataTbl.subIndex = flagTbl.subIndex or flagTbl.s
+
+	elseif optiontbl.subset then
+		dataTbl.cmd = "setSubTaskStatus"
+		dataTbl.index = flagTbl.index or flagTbl.i
+		if not dataTbl.index then
+			print([[task addSub <--index (number)> ]])
+			return
+		end
+		dataTbl.index = tostring(dataTbl.index)
+		dataTbl.subIndex = flagTbl.subIndex or flagTbl.s
+		dataTbl.status = flagTbl.taskType or flagTbl.t 
 	end
 
 	local toPostData = json.encode(dataTbl)

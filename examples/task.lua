@@ -382,6 +382,7 @@ function actionTbl:deleteSubTask(bodyTbl)
 		return "no subIndex"
 	end
 
+	subIndex = tonumber(subIndex)
 	local subTask = task.subTask[subIndex]
 	if not subTask then
 		return "no subtask found"
@@ -409,6 +410,7 @@ function actionTbl:setSubTaskStatus(bodyTbl)
 		return "no subIndex"
 	end
 
+	subIndex = tonumber(subIndex)
 	local subTask = task.subTask[subIndex]
 	if not subTask then
 		return "no subtask found"
