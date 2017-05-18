@@ -339,6 +339,92 @@ function actionTbl:deleteTask(bodyTbl)
 	return "delete done"
 end
 
+-- API: 添加子任务
+function actionTbl:addSubTask(bodyTbl)
+	local index = bodyTbl.index
+	index = tonumber(index)
+	if not index then
+		return "invalid index"
+	end
+	local task = taskData[index]
+	if not task then
+		return "no task found"
+	end
+
+	local content = bodyTbl.subTask
+	if not content then
+		return "no sub task"
+	end
+
+	bodyTbl.status = bodyTbl.status and string.lower(bodyTbl.status)
+	local status = bodyTbl.status and taskType2Value[bodyTbl.status] or taskType2Value.todo
+
+	task.subTask = task.subTask or {}
+	table.insert(task.subTask, {content = content, status = status})
+
+	return "add done"
+end
+
+-- API: 删除子任务
+function actionTbl:addSubTask(bodyTbl)
+	local index = bodyTbl.index
+	index = tonumber(index)
+	if not index then
+		return "invalid index"
+	end
+	local task = taskData[index]
+	if not task then
+		return "no task found"
+	end
+
+	local subIndex = bodyTbl.subIndex
+	if not subIndex then
+		return "no subIndex"
+	end
+
+	local subTask = task.subTask[subIndex]
+	if not subTask then
+		return "no subtask found"
+	end
+
+	table.remove(task.subTask, subIndex)
+
+	return "delete done"
+end
+
+-- API: 设置子任务状态
+function actionTbl:setSubTaskStatus(bodyTbl)
+	local index = bodyTbl.index
+	index = tonumber(index)
+	if not index then
+		return "invalid index"
+	end
+	local task = taskData[index]
+	if not task then
+		return "no task found"
+	end
+
+	local subIndex = bodyTbl.subIndex
+	if not subIndex then
+		return "no subIndex"
+	end
+
+	local subTask = task.subTask[subIndex]
+	if not subTask then
+		return "no subtask found"
+	end
+
+	bodyTbl.status = bodyTbl.status and string.lower(bodyTbl.status)
+	local status = bodyTbl.status and taskType2Value[bodyTbl.status]
+	if not status then
+		return "no subtask status"
+	end
+
+	subTask.status = status
+
+	return "delete done"
+end
+
 skynet.start(function()
 	skynet.dispatch("lua", function (_,_,id)
 		socket.start(id)

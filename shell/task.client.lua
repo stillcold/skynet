@@ -91,11 +91,10 @@ local function doArg(isWindows)
 						local taskData = task
 						if taskData then
 							print("\t"..index..":")
-							print("\t",taskData.taskType)
 							print("\t",taskData.title)
+							print("\t",taskData.taskType.."\t"..taskData.priority.."\t"..taskData.rawDeadline)
 							print("\t",taskData.content)
-							print("\t",taskData.priority)
-							print("\t",taskData.rawDeadline)
+							
 							print("\t","_____________________\n")
 						end
 					end
@@ -148,11 +147,9 @@ local function doArg(isWindows)
 					local taskData = task
 					if taskData then
 						print("\t"..index..":")
-						print("\t",taskData.taskType)
 						print("\t",taskData.title)
+						print("\t",taskData.taskType.."\t"..taskData.priority.."\t"..taskData.rawDeadline)
 						print("\t",taskData.content)
-						print("\t",taskData.priority)
-						print("\t",taskData.rawDeadline)
 						print("\t","_____________________\n")
 					end
 					
