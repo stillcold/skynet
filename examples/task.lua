@@ -220,8 +220,8 @@ function actionTbl:getMostImportantTask()
 	data.priority = value2Priority[data.priority] or data.priority
 	data.taskType = value2TaskType[data.taskType] or data.taskType
 
-	if task.subtask then
-		for _,subtask in ipairs(task.subtask) do
+	if data.subtask then
+		for _,subtask in ipairs(data.subtask) do
 			subtask.taskType = value2TaskType[subtask.taskType] or subtask.taskType
 		end
 	end
@@ -276,8 +276,8 @@ function actionTbl:getTodayTask()
 			data.priority = value2Priority[data.priority] or data.priority
 			data.taskType = value2TaskType[data.taskType] or data.taskType
 
-			if task.subtask then
-				for _,subtask in ipairs(task.subtask) do
+			if data.subtask then
+				for _,subtask in ipairs(data.subtask) do
 					subtask.taskType = value2TaskType[subtask.taskType] or subtask.taskType
 				end
 			end
