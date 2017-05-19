@@ -146,17 +146,30 @@ local function doArg(isWindows)
 				for index,task in pairs(allTaskTbl) do
 					local taskData = task
 					if taskData then
+
 						print("\t"..index..":")
-						print("\t",taskData.title)
-						print("\t",taskData.taskType.."\t"..taskData.priority.."\t"..taskData.rawDeadline)
-						print("\t",taskData.content)
-						if taskData.subTask then
-							for i,subTask in ipairs(taskData.subTask) do
-								print("\t\t",i..":"..subTask.content.." "..subTask.status)
+
+						if taskData.subTask and taskData.subTask[1] then
+							print("\t",taskData.taskType.."..."..taskData.priority.."..."..taskData.rawDeadline)
+							print("\t",taskData.title)
+
+							print("\t",taskData.content.."\n")
+							if taskData.subTask then
+								for i,subTask in ipairs(taskData.subTask) do
+									print("\t\t",i..":"..subTask.content.." "..subTask.status)
+								end
 							end
+						else
+							print("\t",taskData.taskType)
+							print("\t",taskData.title)
+							print("\t",taskData.content)
+							print("\t",taskData.priority)
+							print("\t",taskData.rawDeadline)
+							
 						end
 						
-						print("\t","_____________________\n")
+						
+						print("\t","_______________________________\n")
 					end
 					
 				end
