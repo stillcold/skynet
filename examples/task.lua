@@ -340,6 +340,45 @@ function actionTbl:onTask(bodyTbl)
 	return "set done"
 end
 
+-- API: 标记任务为todo状态
+function actionTbl:resetTaskType(bodyTbl)
+	local index = bodyTbl.index
+	index = tonumber(index)
+	if not index then
+		return "invalid index"
+	end
+
+	local task = taskData[index]
+	if not task then
+		return "no task found"
+	end
+
+	task.taskType = taskType2Value.todo
+	return "set done"
+end
+
+-- API: 设置任务优先级
+function actionTbl:setTaskPriority(bodyTbl)
+	local index = bodyTbl.index
+	index = tonumber(index)
+	if not index then
+		return "invalid index"
+	end
+
+	local task = taskData[index]
+	if not task then
+		return "no task found"
+	end
+
+	local priority = bodyTbl.priority
+	if not priority2Value[priority] then
+		return "priority not in defined table"
+	end
+
+	task.priority = priority2Value[priority]
+	return "set done"
+end
+
 -- API: 取消任务
 function actionTbl:deleteTask(bodyTbl)
 	local index = bodyTbl.index
