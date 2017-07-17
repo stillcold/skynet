@@ -27,7 +27,7 @@ local actionTbl = {}
 local taskType2Value = {todo=2, doing=3, done=1}
 local priority2Value = {critical=5,high=4,normal=3,low=2,memo=1}
 local value2TaskType = {"done", "todo", "doing"}
-local value2Priority = {"memo", "low", "critical", "normal", "high"}
+local value2Priority = {"memo", "low", "normal", "high", "critical"}
 
 local taskTypeWeight = 10000
 local taskPriorityWeight =1
