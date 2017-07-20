@@ -18,6 +18,7 @@ local httpd = require "http.httpd"
 local sockethelper = require "http.sockethelper"
 local urllib = require "http.url"
 local json = require "json"
+local httpc = require "http.httpc"
 local table = table
 local string = string
 
@@ -411,6 +412,7 @@ function actionTbl:deleteSubTask(bodyTbl)
 	return "delete done"
 end
 
+
 -- API: 设置子任务状态
 function actionTbl:setSubTaskStatus(bodyTbl)
 	local index = bodyTbl.index
@@ -443,6 +445,15 @@ function actionTbl:setSubTaskStatus(bodyTbl)
 	subTask.status = status
 
 	return "set done"
+end
+
+
+-- API: 设置子任务状态
+function actionTbl:testHttp(bodyTbl)
+	local recvheader = {}
+	local status, body = httpc.postJson("120.24.98.130", "/db.php", bodyTbl, recvheader)
+
+	return status.."\t".. body
 end
 
 skynet.start(function()

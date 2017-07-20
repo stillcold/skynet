@@ -3,6 +3,7 @@ local socket = require "http.sockethelper"
 local url = require "http.url"
 local internal = require "http.internal"
 local dns = require "dns"
+local json = require "json"
 local string = string
 local table = table
 
@@ -142,6 +143,15 @@ function httpc.post(host, url, form, recvheader)
 	end
 
 	return httpc.request("POST", host, url, recvheader, header, table.concat(body , "&"))
+end
+
+function httpc.postJson(host, url, data, recvheader)
+	local header = {
+		["content-type"] = "application/x-www-form-urlencoded"
+	}
+	local body = data or {}
+
+	return httpc.request("POST", host, url, recvheader, header, json.encode(body or {}))
 end
 
 return httpc
