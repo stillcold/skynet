@@ -493,7 +493,7 @@ function actionTbl:testHttp(bodyTbl)
 	local status, body = httpc.postJson("120.24.98.130", "/db.php", bodyTbl, recvheader)
 
 	print(status, body)
-	return status.."\t".. body
+	return body
 end
 
 skynet.start(function()
