@@ -28,7 +28,7 @@ local actionTbl = {}
 local taskType2Value = {todo=2, doing=3, done=1}
 local priority2Value = {critical=5,high=4,normal=3,low=2,memo=1}
 local value2TaskType = {"done", "todo", "doing"}
-local value2Priority = {"memo", "low", "critical", "normal", "high"}
+local value2Priority = {"memo", "low", "normal", "high", "critical"}
 
 local taskTypeWeight = 10000
 local taskPriorityWeight =1
@@ -338,6 +338,45 @@ function actionTbl:onTask(bodyTbl)
 	end
 
 	task.taskType = taskType2Value.doing
+	return "set done"
+end
+
+-- API: 标记任务为todo状态
+function actionTbl:resetTaskType(bodyTbl)
+	local index = bodyTbl.index
+	index = tonumber(index)
+	if not index then
+		return "invalid index"
+	end
+
+	local task = taskData[index]
+	if not task then
+		return "no task found"
+	end
+
+	task.taskType = taskType2Value.todo
+	return "set done"
+end
+
+-- API: 设置任务优先级
+function actionTbl:setTaskPriority(bodyTbl)
+	local index = bodyTbl.index
+	index = tonumber(index)
+	if not index then
+		return "invalid index"
+	end
+
+	local task = taskData[index]
+	if not task then
+		return "no task found"
+	end
+
+	local priority = bodyTbl.priority
+	if not priority2Value[priority] then
+		return "priority not in defined table"
+	end
+
+	task.priority = priority2Value[priority]
 	return "set done"
 end
 
