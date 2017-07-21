@@ -124,17 +124,17 @@ local function loadAllTaskFronDB()
 			maxId = tonumber(id)
 		end
 
-		local taskData = json.decode(data.data)
+		local taskDataT = json.decode(data.data)
 
-		local title = taskData.title
+		local title = taskDataT.title
 		print(title)
-		local content = taskData.content
+		local content = taskDataT.content
 		print(content)
-		local deadline = taskData.deadline
+		local deadline = taskDataT.deadline
 		print(deadline)
-		local taskType = taskData.taskType
+		local taskType = taskDataT.taskType
 		print(taskType)
-		local priority = taskData.priority
+		local priority = taskDataT.priority
 		print(priority)
 		local timeTbl,newRawStr = GetDateFromNumber(deadline)
 		local deadlineTime = os.time(timeTbl)
