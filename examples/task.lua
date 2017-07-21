@@ -44,7 +44,7 @@ local function loadAllTaskFronDB()
 		return
 	end
 	local bodyTbl = {}
-	bodyTbl.cmd = "SelectTask";
+	bodyTbl.cmd = "select";
 	local recvheader = {}
 	local status, body = httpc.postJson("120.24.98.130", "/db.php", bodyTbl, recvheader)
 
