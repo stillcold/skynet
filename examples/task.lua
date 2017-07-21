@@ -39,6 +39,22 @@ local hasLoaded
 
 local function trim(s) return (string.gsub(s, "^%s*(.-)%s*$", "%1"))end
 
+local function loadAllTaskFronDB()
+	if hasLoaded then
+		return
+	end
+	local bodyTbl = {}
+	bodyTbl.cmd = "SelectTask";
+	local recvheader = {}
+	local status, body = httpc.postJson("120.24.98.130", "/db.php", bodyTbl, recvheader)
+
+	hasLoaded = true
+	print(status, body)
+	return body
+	--table.insert(taskData, {title = title, content = content, priority = priority2Value[priority], deadline = deadlineTime, taskType = taskType2Value[taskType], rawDeadline = newRawStr or deadline})
+end
+
+
 local mode = ...
 
 if mode == "agent" then
@@ -197,21 +213,6 @@ local function _GetTaskDeadlineValue(deadline)
 
 	return 1 * deadlineWeight
 
-end
-
-local function loadAllTaskFronDB()
-	if hasLoaded then
-		return
-	end
-	local bodyTbl = {}
-	bodyTbl.cmd = "SelectTask";
-	local recvheader = {}
-	local status, body = httpc.postJson("120.24.98.130", "/db.php", bodyTbl, recvheader)
-
-	hasLoaded = true
-	print(status, body)
-	return body
-	--table.insert(taskData, {title = title, content = content, priority = priority2Value[priority], deadline = deadlineTime, taskType = taskType2Value[taskType], rawDeadline = newRawStr or deadline})
 end
 
 -- 获得当前任务的优先级估值
