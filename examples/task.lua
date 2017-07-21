@@ -40,6 +40,62 @@ local maxId
 
 local function trim(s) return (string.gsub(s, "^%s*(.-)%s*$", "%1"))end
 
+-- 20170501_13:46:59
+local function GetDateFromNumber(v)
+
+	local t = {}
+
+	local rawDeadline
+	local isSpecialStr = false
+	if v == "now" then
+		t = os.date("*t",os.time() )
+		isSpecialStr = true
+	end
+
+	if v == "hour" then
+		t = os.date("*t",os.time() + 3600)
+		isSpecialStr = true
+	end
+
+	if v == "today" or v == "day" then
+		t = os.date("*t",os.time() + 24*3600)
+		isSpecialStr = true
+	end
+
+	if v == "week" then
+		t = os.date("*t",os.time() + 7*24*3600)
+		isSpecialStr = true
+	end
+
+	if v == "month" then
+		t = os.date("*t",os.time() + 30*24*3600)
+		isSpecialStr = true
+	end
+
+	if v == "year" then
+		t = os.date("*t",os.time() + 365*24*3600)
+		isSpecialStr = true
+	end
+
+	local v_number = tonumber(v)
+	if v_number and v_number > 0 then
+		t = os.date("*t",v_number)
+		isSpecialStr = true
+	end
+
+	if isSpecialStr then
+		rawDeadline = ""..t.year.."-"..t.month.."-"..t.day.."_"..t.hour..":"..t.min..":"..t.sec
+		return t,rawDeadline
+	end
+
+	t.year,t.month,t.day,t.hour,t.min,t.sec = tostring(v):match("(....)(..)(..)[_]+(..):(..):(..)")
+	for k,v in pairs(t) do t[k] = tonumber(v) end
+	t.hour = t.hour or 0
+	t.min = t.min or 0
+	t.sec = t.sec or 0
+	return t
+end
+
 local function loadAllTaskFronDB()
 	if hasLoaded then
 		return
@@ -147,61 +203,7 @@ local function copytbl(ori)
 	return copy
 end
 
--- 20170501_13:46:59
-local function GetDateFromNumber(v)
 
-	local t = {}
-
-	local rawDeadline
-	local isSpecialStr = false
-	if v == "now" then
-		t = os.date("*t",os.time() )
-		isSpecialStr = true
-	end
-
-	if v == "hour" then
-		t = os.date("*t",os.time() + 3600)
-		isSpecialStr = true
-	end
-
-	if v == "today" or v == "day" then
-		t = os.date("*t",os.time() + 24*3600)
-		isSpecialStr = true
-	end
-
-	if v == "week" then
-		t = os.date("*t",os.time() + 7*24*3600)
-		isSpecialStr = true
-	end
-
-	if v == "month" then
-		t = os.date("*t",os.time() + 30*24*3600)
-		isSpecialStr = true
-	end
-
-	if v == "year" then
-		t = os.date("*t",os.time() + 365*24*3600)
-		isSpecialStr = true
-	end
-
-	local v_number = tonumber(v)
-	if v_number and v_number > 0 then
-		t = os.date("*t",v_number)
-		isSpecialStr = true
-	end
-
-	if isSpecialStr then
-		rawDeadline = ""..t.year.."-"..t.month.."-"..t.day.."_"..t.hour..":"..t.min..":"..t.sec
-		return t,rawDeadline
-	end
-
-	t.year,t.month,t.day,t.hour,t.min,t.sec = tostring(v):match("(....)(..)(..)[_]+(..):(..):(..)")
-	for k,v in pairs(t) do t[k] = tonumber(v) end
-	t.hour = t.hour or 0
-	t.min = t.min or 0
-	t.sec = t.sec or 0
-	return t
-end
 
 local function _GetTaskTypeValue(taskType)
 	if not taskType then
