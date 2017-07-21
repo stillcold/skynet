@@ -204,9 +204,6 @@ local function loadAllTaskFronDB()
 	local recvheader = {}
 	local status, body = httpc.postJson("120.24.98.130", "/db.php", bodyTbl, recvheader)
 
-	if session_id_coroutine[loadDataTick] then
-		session_id_coroutine[loadDataTick] = nil
-	end
 	
 	print(status, body)
 	return body
@@ -513,7 +510,7 @@ function actionTbl:testHttp(bodyTbl)
 	return body
 end
 
-loadDataTick = skynet.timeout(1000, loadAllTaskFronDB)
+loadDataTick = skynet.timeout(300, loadAllTaskFronDB)
 
 skynet.start(function()
 	skynet.dispatch("lua", function (_,_,id)
