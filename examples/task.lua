@@ -196,6 +196,17 @@ local function _GetTaskDeadlineValue(deadline)
 
 end
 
+local function loadAllTaskFronDB()
+	local bodyTbl = {}
+	bodyTbl.cmd = "SelectTask";
+	local recvheader = {}
+	local status, body = httpc.postJson("120.24.98.130", "/db.php", bodyTbl, recvheader)
+
+	print(status, body)
+	return body
+	--table.insert(taskData, {title = title, content = content, priority = priority2Value[priority], deadline = deadlineTime, taskType = taskType2Value[taskType], rawDeadline = newRawStr or deadline})
+end
+
 -- 获得当前任务的优先级估值
 local function GetTaskValue(taskIndex)
 	local currentTask = taskData[taskIndex]
@@ -495,6 +506,8 @@ function actionTbl:testHttp(bodyTbl)
 	print(status, body)
 	return body
 end
+
+loadAllTaskFronDB()
 
 skynet.start(function()
 	skynet.dispatch("lua", function (_,_,id)
