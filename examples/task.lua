@@ -34,6 +34,8 @@ local taskTypeWeight = 10000
 local taskPriorityWeight =1
 local deadlineWeight = 100
 
+local loadDataTick
+
 local function trim(s) return (string.gsub(s, "^%s*(.-)%s*$", "%1"))end
 
 local mode = ...
@@ -202,6 +204,10 @@ local function loadAllTaskFronDB()
 	local recvheader = {}
 	local status, body = httpc.postJson("120.24.98.130", "/db.php", bodyTbl, recvheader)
 
+	if session_id_coroutine[loadDataTick] then
+		session_id_coroutine[loadDataTick] = nil
+	end
+	
 	print(status, body)
 	return body
 	--table.insert(taskData, {title = title, content = content, priority = priority2Value[priority], deadline = deadlineTime, taskType = taskType2Value[taskType], rawDeadline = newRawStr or deadline})
@@ -507,7 +513,7 @@ function actionTbl:testHttp(bodyTbl)
 	return body
 end
 
-loadAllTaskFronDB()
+loadDataTick = skynet.timeout(1000, loadAllTaskFronDB)
 
 skynet.start(function()
 	skynet.dispatch("lua", function (_,_,id)
