@@ -55,7 +55,7 @@ local function loadAllTaskFronDB()
 		return
 	end
 
-	local alldata = json.encode(body)
+	local alldata = json.decode(body)
 	if not alldata then
 		return
 	end
