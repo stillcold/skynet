@@ -35,6 +35,7 @@ local taskPriorityWeight =1
 local deadlineWeight = 100
 
 local loadDataTick
+local hasLoaded
 
 local function trim(s) return (string.gsub(s, "^%s*(.-)%s*$", "%1"))end
 
@@ -199,12 +200,15 @@ local function _GetTaskDeadlineValue(deadline)
 end
 
 local function loadAllTaskFronDB()
+	if hasLoaded then
+		return
+	end
 	local bodyTbl = {}
 	bodyTbl.cmd = "SelectTask";
 	local recvheader = {}
 	local status, body = httpc.postJson("120.24.98.130", "/db.php", bodyTbl, recvheader)
 
-	
+	hasLoaded = true
 	print(status, body)
 	return body
 	--table.insert(taskData, {title = title, content = content, priority = priority2Value[priority], deadline = deadlineTime, taskType = taskType2Value[taskType], rawDeadline = newRawStr or deadline})
