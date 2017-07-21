@@ -68,12 +68,14 @@ local function loadAllTaskFronDB()
 			maxId = tonumber(id)
 		end
 
-		local title = data.data.title
+		local taskData = json.decode(data.data)
+		
+		local title = taskData.title
 		print(title)
-		local content = data.data.content
-		local deadline = data.data.deadline
-		local taskType = data.data.taskType
-		local priority = data.data.priority
+		local content = taskData.content
+		local deadline = taskData.deadline
+		local taskType = taskData.taskType
+		local priority = taskData.priority
 
 		table.insert(taskData, {id = id, title = title, content = content, priority = priority2Value[priority], deadline = deadlineTime, taskType = taskType2Value[taskType], rawDeadline = newRawStr or deadline})
 	end
