@@ -36,6 +36,7 @@ local deadlineWeight = 100
 
 local loadDataTick
 local hasLoaded
+local maxId
 
 local function trim(s) return (string.gsub(s, "^%s*(.-)%s*$", "%1"))end
 
@@ -44,16 +45,73 @@ local function loadAllTaskFronDB()
 		return
 	end
 	local bodyTbl = {}
-	bodyTbl.cmd = "select";
+	bodyTbl.cmd = "select"
 	local recvheader = {}
 	local status, body = httpc.postJson("120.24.98.130", "/db.php", bodyTbl, recvheader)
 
 	hasLoaded = true
-	print(status, body)
-	return body
+
+	if not body then
+		return
+	end
+
+	local alldata = json.encode(body)
+	if not alldata then
+		return
+	end
+
+	for _,data in pairs(alldata) do
+
+		local id = data.id
+		if not maxId or maxId < id then
+			maxId = tonumber(id)
+		end
+
+		local title = data.data.title
+		local content = data.data.content
+		local deadline = data.data.deadline
+		local taskType = data.data.taskType
+		local priority = data.data.priority
+
+		table.insert(taskData, {id = id, title = title, content = content, priority = priority2Value[priority], deadline = deadlineTime, taskType = taskType2Value[taskType], rawDeadline = newRawStr or deadline})
+	end
+	
 	--table.insert(taskData, {title = title, content = content, priority = priority2Value[priority], deadline = deadlineTime, taskType = taskType2Value[taskType], rawDeadline = newRawStr or deadline})
 end
 
+local function updateTask(id, data)
+	local bodyTbl = {}
+	bodyTbl.cmd = "update"
+	bodyTbl.data = data
+	bodyTbl.Deleted = 0
+	local recvheader = {}
+	local status, body = httpc.postJson("120.24.98.130", "/db.php", bodyTbl, recvheader)
+end
+
+local function OnTaskUpdate(index)
+	local task = taskData[index]
+	updateTask(task.id, data)
+end
+
+
+local function insertTask(id, data)
+	local bodyTbl = {}
+	bodyTbl.cmd = "insert"
+	bodyTbl.data = data
+	bodyTbl.Deleted = 0
+	local recvheader = {}
+	local status, body = httpc.postJson("120.24.98.130", "/db.php", bodyTbl, recvheader)
+end
+
+
+local function markTaskAsDelete(id, data)
+	local bodyTbl = {}
+	bodyTbl.cmd = "update"
+	bodyTbl.data = data
+	bodyTbl.Deleted = 1
+	local recvheader = {}
+	local status, body = httpc.postJson("120.24.98.130", "/db.php", bodyTbl, recvheader)
+end
 
 local mode = ...
 
@@ -280,7 +338,10 @@ function actionTbl:addTask(bodyTbl)
 		return "priority not in defined table"
 	end
 
-	table.insert(taskData, {title = title, content = content, priority = priority2Value[priority], deadline = deadlineTime, taskType = taskType2Value[taskType], rawDeadline = newRawStr or deadline})
+	local id = (maxId or 0) + 1
+	local task = {id = id, title = title, content = content, priority = priority2Value[priority], deadline = deadlineTime, taskType = taskType2Value[taskType], rawDeadline = newRawStr or deadline}
+	table.insert(taskData, task)
+	insertTask(id, task)
 	return "addTask done"
 
 end
@@ -340,6 +401,8 @@ function actionTbl:finishTask(bodyTbl)
 	end
 
 	task.taskType = taskType2Value.done
+	OnTaskUpdate(index)
+
 	return "set done"
 end
 
@@ -357,6 +420,7 @@ function actionTbl:onTask(bodyTbl)
 	end
 
 	task.taskType = taskType2Value.doing
+	OnTaskUpdate(index)
 	return "set done"
 end
 
@@ -374,6 +438,7 @@ function actionTbl:resetTaskType(bodyTbl)
 	end
 
 	task.taskType = taskType2Value.todo
+	OnTaskUpdate(index)
 	return "set done"
 end
 
@@ -396,6 +461,7 @@ function actionTbl:setTaskPriority(bodyTbl)
 	end
 
 	task.priority = priority2Value[priority]
+	OnTaskUpdate(index)
 	return "set done"
 end
 
@@ -413,10 +479,13 @@ function actionTbl:deleteTask(bodyTbl)
 
 	table.remove(taskData,index)
 
+	markTaskAsDelete(task.id, task)
+
 	return "delete done"
 end
 
 -- API: 添加子任务
+-- todo DB
 function actionTbl:addSubTask(bodyTbl)
 	local index = bodyTbl.index
 	index = tonumber(index)
@@ -443,6 +512,7 @@ function actionTbl:addSubTask(bodyTbl)
 end
 
 -- API: 删除子任务
+-- todo DB
 function actionTbl:deleteSubTask(bodyTbl)
 	local index = bodyTbl.index
 	index = tonumber(index)
@@ -472,6 +542,7 @@ end
 
 
 -- API: 设置子任务状态
+-- todo DB
 function actionTbl:setSubTaskStatus(bodyTbl)
 	local index = bodyTbl.index
 	index = tonumber(index)
