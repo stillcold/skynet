@@ -63,11 +63,13 @@ local function loadAllTaskFronDB()
 	for _,data in pairs(alldata) do
 
 		local id = data.id
+		print(id)
 		if not maxId or maxId < id then
 			maxId = tonumber(id)
 		end
 
 		local title = data.data.title
+		print(title)
 		local content = data.data.content
 		local deadline = data.data.deadline
 		local taskType = data.data.taskType
