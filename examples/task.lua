@@ -163,7 +163,7 @@ local function updateTask(id, data)
 	bodyTbl.id = id
 	bodyTbl.data = copytbl (data)
 	bodyTbl.data.rawDeadline = nil
-	
+
 	bodyTbl.Deleted = 0
 	local recvheader = {}
 	local status, body = httpc.postJson("120.24.98.130", "/db.php", bodyTbl, recvheader)
@@ -204,18 +204,6 @@ local function markTaskAsDelete(id, data)
 	print(status, body)
 end
 
-local mode = ...
-
-if mode == "agent" then
-
-local function response(id, ...)
-	local ok, err = httpd.write_response(sockethelper.writefunc(id), ...)
-	if not ok then
-		-- if err == sockethelper.socket_error , that means socket closed.
-		skynet.error(string.format("fd = %d, %s", id, err))
-	end
-end
-
 local function copytbl(ori)
 	if not ori then
 		return nil
@@ -233,6 +221,17 @@ local function copytbl(ori)
 end
 
 
+local mode = ...
+
+if mode == "agent" then
+
+local function response(id, ...)
+	local ok, err = httpd.write_response(sockethelper.writefunc(id), ...)
+	if not ok then
+		-- if err == sockethelper.socket_error , that means socket closed.
+		skynet.error(string.format("fd = %d, %s", id, err))
+	end
+end
 
 local function _GetTaskTypeValue(taskType)
 	if not taskType then
