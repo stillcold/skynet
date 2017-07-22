@@ -22,6 +22,10 @@ local httpc = require "http.httpc"
 local table = table
 local string = string
 
+local print = function ( ... )
+	
+end
+
 local taskData = {}
 local actionTbl = {}
 
