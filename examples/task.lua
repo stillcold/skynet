@@ -84,11 +84,11 @@ local function GetDateFromNumber(v)
 	end
 
 	if isSpecialStr then
-		rawDeadline = ""..t.year.."-"..t.month.."-"..t.day.."_"..t.hour..":"..t.min..":"..t.sec
+		rawDeadline = ""..t.year.."-"..t.month.."-"..t.day.."_"..t.hour.."-"..t.min.."-"..t.sec
 		return t,rawDeadline
 	end
 
-	t.year,t.month,t.day,t.hour,t.min,t.sec = tostring(v):match("(....)(..)(..)[_]+(..):(..):(..)")
+	t.year,t.month,t.day,t.hour,t.min,t.sec = tostring(v):match("(....)(..)(..)[_]+(..)-(..)-(..)")
 	for k,v in pairs(t) do t[k] = tonumber(v) end
 	t.hour = t.hour or 0
 	t.min = t.min or 0
