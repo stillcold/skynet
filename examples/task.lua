@@ -175,6 +175,7 @@ local function insertTask(id, data)
 	bodyTbl.Deleted = 0
 	local recvheader = {}
 	local status, body = httpc.postJson("120.24.98.130", "/db.php", bodyTbl, recvheader)
+	print(status, body)
 end
 
 
