@@ -119,8 +119,10 @@ local function loadAllTaskFronDB()
 	for _,data in pairs(alldata) do
 
 		local id = data.id
+		id = tonumber(id)
+
 		print(id)
-		if not maxId or maxId < id then
+		if not maxId or maxId < tonumber(id) then
 			maxId = tonumber(id)
 		end
 
@@ -133,12 +135,13 @@ local function loadAllTaskFronDB()
 		local deadline = taskDataT.deadline
 		print(deadline)
 		local taskType = taskDataT.taskType
+		taskType = taskType2Value[taskType] or tonumber(taskType)
 		print(taskType)
 		local priority = taskDataT.priority
 		print(priority)
 		local timeTbl,newRawStr = GetDateFromNumber(deadline)
 		local deadlineTime = os.time(timeTbl)
-		print(priority2Value[priority])
+		print(priority2Value[priority] or tonumber(priority))
 
 		local task = {id = id, title = title, content = content, priority = priority2Value[priority], deadline = deadlineTime, taskType = taskType2Value[taskType], rawDeadline = newRawStr or deadline}
 
@@ -155,10 +158,12 @@ end
 local function updateTask(id, data)
 	local bodyTbl = {}
 	bodyTbl.cmd = "update"
+	bodyTbl.id = id
 	bodyTbl.data = data
 	bodyTbl.Deleted = 0
 	local recvheader = {}
 	local status, body = httpc.postJson("120.24.98.130", "/db.php", bodyTbl, recvheader)
+	print(status, body)
 end
 
 local function OnTaskUpdate(index)
@@ -182,10 +187,12 @@ end
 local function markTaskAsDelete(id, data)
 	local bodyTbl = {}
 	bodyTbl.cmd = "update"
+	bodyTbl.id = id
 	bodyTbl.data = data
 	bodyTbl.Deleted = 1
 	local recvheader = {}
 	local status, body = httpc.postJson("120.24.98.130", "/db.php", bodyTbl, recvheader)
+	print(status, body)
 end
 
 local mode = ...
