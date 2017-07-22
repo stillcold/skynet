@@ -140,7 +140,13 @@ local function loadAllTaskFronDB()
 		local deadlineTime = os.time(timeTbl)
 		print(priority2Value[priority])
 
-		table.insert(taskData, {id = id, title = title, content = content, priority = priority2Value[priority], deadline = deadlineTime, taskType = taskType2Value[taskType], rawDeadline = newRawStr or deadline})
+		local task = {id = id, title = title, content = content, priority = priority2Value[priority], deadline = deadlineTime, taskType = taskType2Value[taskType], rawDeadline = newRawStr or deadline}
+
+		table.insert(taskData, task)
+		print(taskData)
+		for k,v in pairs(taskData) do
+			print(k,v)
+		end
 	end
 	
 	--table.insert(taskData, {title = title, content = content, priority = priority2Value[priority], deadline = deadlineTime, taskType = taskType2Value[taskType], rawDeadline = newRawStr or deadline})
@@ -384,6 +390,10 @@ end
 
 -- API: 获取所有的任务
 function actionTbl:getAllTask()
+	print(taskData)
+	for k,v in pairs(taskData) do
+		print(k,v)
+	end
 	local data = copytbl(taskData)
 	for index,task in pairs(data) do
 		task.priority = value2Priority[task.priority] or task.priority
