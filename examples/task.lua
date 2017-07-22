@@ -170,6 +170,7 @@ end
 local function insertTask(id, data)
 	local bodyTbl = {}
 	bodyTbl.cmd = "insert"
+	bodyTbl.id = id
 	bodyTbl.data = data
 	bodyTbl.Deleted = 0
 	local recvheader = {}
