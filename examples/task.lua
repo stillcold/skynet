@@ -161,7 +161,9 @@ local function updateTask(id, data)
 	local bodyTbl = {}
 	bodyTbl.cmd = "update"
 	bodyTbl.id = id
-	bodyTbl.data = data
+	bodyTbl.data = copytbl (data)
+	bodyTbl.data.rawDeadline = nil
+	
 	bodyTbl.Deleted = 0
 	local recvheader = {}
 	local status, body = httpc.postJson("120.24.98.130", "/db.php", bodyTbl, recvheader)
@@ -178,7 +180,10 @@ local function insertTask(id, data)
 	local bodyTbl = {}
 	bodyTbl.cmd = "insert"
 	bodyTbl.id = id
-	bodyTbl.data = data
+	
+	bodyTbl.data = copytbl (data)
+	bodyTbl.data.rawDeadline = nil
+
 	bodyTbl.Deleted = 0
 	local recvheader = {}
 	local status, body = httpc.postJson("120.24.98.130", "/db.php", bodyTbl, recvheader)
@@ -190,7 +195,9 @@ local function markTaskAsDelete(id, data)
 	local bodyTbl = {}
 	bodyTbl.cmd = "update"
 	bodyTbl.id = id
-	bodyTbl.data = data
+
+	bodyTbl.data = copytbl (data)
+	bodyTbl.data.rawDeadline = nil
 	bodyTbl.Deleted = 1
 	local recvheader = {}
 	local status, body = httpc.postJson("120.24.98.130", "/db.php", bodyTbl, recvheader)
