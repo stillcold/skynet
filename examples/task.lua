@@ -394,6 +394,7 @@ function actionTbl:getAllTask()
 	for k,v in pairs(taskData) do
 		print(k,v)
 	end
+	loadAllTaskFronDB()
 	local data = copytbl(taskData)
 	for index,task in pairs(data) do
 		task.priority = value2Priority[task.priority] or task.priority
@@ -674,7 +675,7 @@ else
 skynet.start(function()
 	local agent = skynet.newservice(SERVICE_NAME, "agent")
 	local balance = 1
-	skynet.timeout(300, function() loadAllTaskFronDB() end)
+	--skynet.timeout(300, function() loadAllTaskFronDB() end)
 
 	local id = socket.listen("0.0.0.0", 6001)
 	skynet.error("Listen web port 6001")
