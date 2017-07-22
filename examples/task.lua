@@ -40,6 +40,22 @@ local maxId
 
 local function trim(s) return (string.gsub(s, "^%s*(.-)%s*$", "%1"))end
 
+local function copytbl(ori)
+	if not ori then
+		return nil
+	end
+
+	if type(ori) ~= "table" then
+		return ori
+	end
+
+	local copy = {}
+	for k,v in pairs(ori) do
+		copy[k] = copytbl(v)
+	end
+	return copy
+end
+
 -- 20170501_13:46:59
 local function GetDateFromNumber(v)
 
@@ -202,22 +218,6 @@ local function markTaskAsDelete(id, data)
 	local recvheader = {}
 	local status, body = httpc.postJson("120.24.98.130", "/db.php", bodyTbl, recvheader)
 	print(status, body)
-end
-
-local function copytbl(ori)
-	if not ori then
-		return nil
-	end
-
-	if type(ori) ~= "table" then
-		return ori
-	end
-
-	local copy = {}
-	for k,v in pairs(ori) do
-		copy[k] = copytbl(v)
-	end
-	return copy
 end
 
 
