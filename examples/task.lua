@@ -188,7 +188,7 @@ end
 
 local function OnTaskUpdate(index)
 	local task = taskData[index]
-	updateTask(task.id, data)
+	updateTask(task.id, task)
 end
 
 
