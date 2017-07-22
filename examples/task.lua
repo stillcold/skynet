@@ -153,15 +153,15 @@ local function loadAllTaskFronDB()
 		local deadline = taskDataT.deadline
 		print(deadline)
 		local taskType = taskDataT.taskType
-		taskType = taskType2Value[taskType] or tonumber(taskType)
+		taskType = taskType2Value[taskType] or tonumber(taskType) or 2
 		print(taskType)
 		local priority = taskDataT.priority
+		priority = priority2Value[priority] or tonumber(priority) or 3
 		print(priority)
 		local timeTbl,newRawStr = GetDateFromNumber(deadline)
 		local deadlineTime = os.time(timeTbl)
-		print(priority2Value[priority] or tonumber(priority))
 
-		local task = {id = id, title = title, content = content, priority = priority2Value[priority], deadline = deadlineTime, taskType = taskType2Value[taskType], rawDeadline = newRawStr or deadline}
+		local task = {id = id, title = title, content = content, priority = priority, deadline = deadlineTime, taskType = taskType2Value[taskType], rawDeadline = newRawStr or deadline}
 
 		table.insert(taskData, task)
 		print(taskData)
