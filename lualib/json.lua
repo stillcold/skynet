@@ -233,7 +233,8 @@ function decode_scanNumber(s,startPos)
 	) do
     endPos = endPos + 1
   end
-  local numValue = tonumber(string.sub(s,startPos, endPos-1))
+  local stringValue = string.sub(s,startPos, endPos-1)
+  local numValue = tonumber(stringPara)
   --local stringEval = loadstring(stringValue)
   assert(numValue, 'Failed to scan number [ ' .. stringValue .. '] in JSON string at position ' .. startPos .. ' : ' .. endPos)
   return numValue, endPos
