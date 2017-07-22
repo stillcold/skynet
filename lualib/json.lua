@@ -233,10 +233,10 @@ function decode_scanNumber(s,startPos)
 	) do
     endPos = endPos + 1
   end
-  local stringValue = 'return ' .. string.sub(s,startPos, endPos-1)
-  local stringEval = loadstring(stringValue)
-  assert(stringEval, 'Failed to scan number [ ' .. stringValue .. '] in JSON string at position ' .. startPos .. ' : ' .. endPos)
-  return stringEval(), endPos
+  local numValue = tonumber(string.sub(s,startPos, endPos-1))
+  --local stringEval = loadstring(stringValue)
+  assert(numValue, 'Failed to scan number [ ' .. stringValue .. '] in JSON string at position ' .. startPos .. ' : ' .. endPos)
+  return numValue, endPos
 end
 
 --- Scans a JSON object into a Lua object.
