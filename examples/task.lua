@@ -126,6 +126,8 @@ local function loadAllTaskFronDB()
 			maxId = tonumber(id)
 		end
 
+		print(data.data)
+
 		local taskDataT = json.decode(data.data)
 
 		local title = taskDataT.title
