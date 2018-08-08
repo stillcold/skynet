@@ -12,7 +12,7 @@ local sproto = require "sproto"
 local host = sproto.new(proto.s2c):host "package"
 local request = host:attach(sproto.new(proto.c2s))
 
-local fd = assert(socket.connect("127.0.0.1", 8888))
+local fd = assert(socket.connect("127.0.0.1", 8003))
 
 local function send_package(fd, pack)
 	local package = string.pack(">s2", pack)
@@ -54,7 +54,7 @@ local function send_request(name, args)
 	session = session + 1
 	local str = request(name, args, session)
 	send_package(fd, str)
-	print("Request:", session)
+	print("Request:", session, str)
 end
 
 local last = ""
@@ -99,8 +99,9 @@ local function dispatch_package()
 end
 
 send_request("handshake")
+--send_package(fd, "handshake")
 while true do
 	dispatch_package()
-	send_request("heartbeat")
+	--send_request("heartbeat")
 	socket.usleep(1000)
 end

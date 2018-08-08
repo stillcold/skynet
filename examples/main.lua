@@ -13,6 +13,7 @@ skynet.start(function()
 	skynet.newservice("simpledb")
 	skynet.newservice("simpleweb")
 	skynet.newservice("task")
+	skynet.newservice("transferentry")
 	skynet.newservice("httptransfer")
 	local watchdog = skynet.newservice("watchdog")
 	skynet.call(watchdog, "lua", "start", {
