@@ -40,6 +40,10 @@ end
 function SOCKET.data(fd, msg)
 end
 
+-- 00000002: 最后调用到这里, cmd 是 start, subcmd 是 config
+-- 接着这个调用会发给 gate, 而gate的入口在 gateserver
+-- 这里面有个疑问,好像并没有启动 gateserver 服务,它怎么就起来了
+-- 其中, gate 的最后确实有启动的代码,它是什么时候运行的
 function CMD.start(conf)
 	skynet.call(gate, "lua", "open" , conf)
 end
@@ -50,12 +54,14 @@ end
 
 skynet.start(function()
 	skynet.dispatch("lua", function(session, source, cmd, subcmd, ...)
-		print("from watchdog", cmd, subcmd)
+		print("Debug info from watchdog", cmd, subcmd)
 		if cmd == "socket" then
 			local f = SOCKET[subcmd]
 			f(...)
 			-- socket api don't need return
 		else
+			-- 00000001: 实际上调用到这里, cmd 是 start, subcmd 是 config
+			-- subcmd 对应了 config, 这里的语义已经对不上了, skynet存在一些优化细节
 			local f = assert(CMD[cmd])
 			skynet.ret(skynet.pack(f(subcmd, ...)))
 		end

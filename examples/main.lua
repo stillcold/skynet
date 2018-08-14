@@ -15,7 +15,11 @@ skynet.start(function()
 	skynet.newservice("task")
 	skynet.newservice("transferentry")
 	skynet.newservice("httptransfer")
+	skynet.newservice("simplesocket")
+
 	local watchdog = skynet.newservice("watchdog")
+
+	-- 00000000: 调用 watchdog 服务,发送 start 消息和一堆配置
 	skynet.call(watchdog, "lua", "start", {
 		port = 8888,
 		maxclient = max_client,

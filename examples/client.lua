@@ -9,7 +9,9 @@ local socket = require "clientsocket"
 local proto = require "proto"
 local sproto = require "sproto"
 
+-- 00000024: 
 local host = sproto.new(proto.s2c):host "package"
+-- 00000023: 
 local request = host:attach(sproto.new(proto.c2s))
 
 local fd = assert(socket.connect("127.0.0.1", 8888))
@@ -50,6 +52,7 @@ end
 
 local session = 0
 
+-- 00000021: 第一个请求, name = "handshake"
 local function send_request(name, args)
 	session = session + 1
 	local str = request(name, args, session)
@@ -98,6 +101,7 @@ local function dispatch_package()
 	end
 end
 
+-- 00000020: 且看客户端和服务端的第一个交互过程 handshake
 send_request("handshake")
 send_request("set", { what = "hello", value = "world" })
 while true do

@@ -1,6 +1,6 @@
 local skynet = require "skynet"
 local netpack = require "netpack"
-local socketdriver = require "socketdriver"
+local socketdriver = require "socketdriver" -- lua-socket.c 生成的dll/so文件
 
 local gateserver = {}
 
@@ -31,16 +31,19 @@ function gateserver.start(handler)
 	assert(handler.message)
 	assert(handler.connect)
 
+	-- 00000004: 调用到这里, source 是 watchdog, conf 是从 main 中传递过来的
 	function CMD.open( source, conf )
 		assert(not socket)
 		local address = conf.address or "0.0.0.0"
 		local port = assert(conf.port)
 		maxclient = conf.maxclient or 1024
 		nodelay = conf.nodelay
-		skynet.error(string.format("Listen on %s:%d", address, port))
+		skynet.error(string.format("Gateway Listen on %s:%d", address, port))
+		-- 00000004: 这里终于开始监听接口
 		socket = socketdriver.listen(address, port)
 		socketdriver.start(socket)
 		if handler.open then
+			-- 00000005: handler 是 gate, 这句话会把 gate 的 watchdog 设置对
 			return handler.open(source, conf)
 		end
 	end
@@ -128,9 +131,13 @@ function gateserver.start(handler)
 		end
 	end
 
+	-- 00000010: 这里应该是干了一件很傻逼的事情
+	-- 应该是 PTYPE_SOCKET 类型的消息被分发到了这里的 dispatch
+	-- Question: 到底有多少消息是被分发到这里的 ? 肯定不会把所有的socket的消息都分发到这里了
 	skynet.register_protocol {
 		name = "socket",
 		id = skynet.PTYPE_SOCKET,	-- PTYPE_SOCKET = 6
+		-- Question: 为啥没有提供 pack 方法
 		unpack = function ( msg, sz )
 			return netpack.filter( queue, msg, sz)
 		end,
@@ -145,6 +152,7 @@ function gateserver.start(handler)
 	skynet.start(function()
 		skynet.dispatch("lua", function (_, address, cmd, ...)
 			local f = CMD[cmd]
+			-- 00000003: 调用到这里, cmd 是 open, ... 是 config
 			if f then
 				skynet.ret(skynet.pack(f(address, ...)))
 			else

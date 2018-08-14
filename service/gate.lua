@@ -13,6 +13,7 @@ skynet.register_protocol {
 
 local handler = {}
 
+-- 00000006: 从Gateway 调用过来的, 把 gate 的 watchdog 设置对
 function handler.open(source, conf)
 	watchdog = conf.watchdog or source
 end
