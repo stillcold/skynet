@@ -33,5 +33,5 @@ skynet.start(function()
             echo(id)
         end)
     --可以为自己注册一个别名。（别名必须在 32 个字符以内）
-    skynet.register "SimpleSocket"
+    -- skynet.register "SimpleSocket"
 end)
