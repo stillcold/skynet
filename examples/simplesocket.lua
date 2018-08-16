@@ -1,5 +1,6 @@
 local skynet = require "skynet"
 local socket = require "socket"
+require "skynet.manager"    -- import skynet.register
 
 local function echo(id)
     -- 每当 accept 函数获得一个新的 socket id 后，并不会立即收到这个 socket 上的数据。这是因为，我们有时会希望把这个 socket 的操作权转让给别的服务去处理。
@@ -33,5 +34,5 @@ skynet.start(function()
             echo(id)
         end)
     --可以为自己注册一个别名。（别名必须在 32 个字符以内）
-    -- skynet.register "SimpleSocket"
+    skynet.register "SIMPLESOCKET"
 end)
