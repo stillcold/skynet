@@ -19,6 +19,10 @@ while true do
     local str   = socket.recv(fd)
     if str~=nil and str~="" then
             print("server echo: "..str)
+            if string.sub(str, 1, 9) == "serverAsk" then
+                --sendrequest("anserserver"..string.sub(str, 10))
+                sendrequest("anserserverhere is the pure response from client")
+            end
     end
 
     -- 读取用户输入消息

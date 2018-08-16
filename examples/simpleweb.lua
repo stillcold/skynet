@@ -3,12 +3,16 @@ local socket = require "socket"
 local httpd = require "http.httpd"
 local sockethelper = require "http.sockethelper"
 local urllib = require "http.url"
+require "skynet.manager"    -- import skynet.register
+
 local table = table
 local string = string
 local localHmtlVarTbl = {}
 localHmtlVarTbl.curIndex = 1
 local htmlHeader
 local htmlBottom
+local cachedClientFd = nil
+
 local function setHtmlShell()
 	local f = assert(io.open([==[examples/html_header.html]==],'r'))
 	local content = f:read("*all")
@@ -42,10 +46,6 @@ end
 
 local function trim(s) return (string.gsub(s, "^%s*(.-)%s*$", "%1"))end
 
-local mode = ...
-
-if mode == "agent" then
-
 local function response(id, ...)
 	local ok, err = httpd.write_response(sockethelper.writefunc(id), ...)
 	if not ok then
@@ -54,8 +54,28 @@ local function response(id, ...)
 	end
 end
 
+local mode = ...
+
+if mode == "agent" then
+
+
+
 skynet.start(function()
-	skynet.dispatch("lua", function (_,_,id)
+	skynet.dispatch("lua", function (_,_,id,more)
+
+		if id == "ANSWER" then
+
+			print("more is ",more)
+			if cachedClientFd then
+            	response(cachedClientFd, 200, "OK")
+            	cachedClientFd = nil
+            else
+            	print("nil cachedClientFd 2")
+            end
+
+            return
+		end
+
 		socket.start(id)
 		-- limit request body size to 8192 (you can pass nil to unlimit)
 		local code, url, method, header, body = httpd.read_request(sockethelper.readfunc(id), 8192)
@@ -107,10 +127,22 @@ skynet.start(function()
 					table.insert(tmp, mainContent[i] or "")
 				end
 
+				
+
 				htmlBottom = string.gsub(htmlBottom, "%$([%w]+)", getLocalVar)
 
-				response(id, code, htmlHeader..table.concat(tmp,"\n")..htmlBottom)
+				--response(id, code, htmlHeader..table.concat(tmp,"\n")..htmlBottom)
 				--response(id, code, htmlHeader..htmlBottom)
+
+				local innerClientMsg = skynet.call("SIMPLESOCKET", "lua", "ping")
+				print("innerClientMsg is ", innerClientMsg)
+				response(id, code, innerClientMsg or "empty")
+
+				--cachedClientFd = id
+
+				--print("cached id is", id)
+
+				--skynet.send("SIMPLESOCKET", "lua", "ping"..id)
 			end
 		else
 			if url == sockethelper.socket_error then
@@ -141,6 +173,22 @@ skynet.start(function()
 			balance = 1
 		end
 	end)
+
+	skynet.dispatch("lua", function(session, address, cmd, ...)
+
+		print("SIMPLEWEB debug ", cmd)
+        if string.sub(cmd, 1, 6) == "ANSWER" then
+        	print("SIMPLEWEB recieve ANSWER ")
+
+        	local target = tonumber(string.sub(cmd, 7) )
+
+        	-- skynet.send(agent[balance], "lua", cmd, ...)
+        	response(target, 200, cmd)
+        	
+        end
+    end)
+
+	skynet.register "SIMPLEWEB"
 end)
 
 end
