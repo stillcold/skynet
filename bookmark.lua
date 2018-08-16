@@ -1,4 +1,4 @@
 -- ---------------------
 -- This is for record only
 -- ---------------------
-local CurrentId = 00000010
+local CurrentId = 00000024
