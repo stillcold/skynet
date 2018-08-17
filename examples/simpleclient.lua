@@ -7,6 +7,7 @@ end
 
 local socket = require "clientsocket"
 local luaB64 = require "b64InLua"
+local fileMgr = require "libChao_Lua/FileMgr/WindowsFileMgr"
 
 local fd = assert(socket.connect("127.0.0.1", 8108))
 local sendrequest = function(content, bnotshow)
@@ -19,14 +20,49 @@ end
 
 sendrequest("hi")
 
+local function getrandomValidPicFile()
+    local dirs = fileMgr:GetAllDirNameInDir("G:\\www\\spics")
+    local dirCount = #dirs
+
+    local targetFile
+
+    local count = 0
+    while targetFile == nil do
+
+        count = count + 1
+        if count > 10 then
+            return "testPic.png"
+        end
+
+        local randomIndex = math.random(3, dirCount)
+        local chosenDir = dirs[randomIndex]
+        local files = fileMgr:GetAllFileNameInDir("G:\\www\\spics\\"..chosenDir)
+        local fileCount = #files
+
+        if fileCount > 0 then
+            local randomFileIdx = math.random(fileCount)
+            local chosenFile = files[randomFileIdx]
+            targetFile = "G:\\www\\spics\\"..chosenDir.."\\"..chosenFile
+            return targetFile
+        end
+    end
+
+    
+end
+
 local function curlRequest()
-    local fileHandler = io.open("project_page.png", "rb")
+
+    local targetFile = getrandomValidPicFile()
+
+
+    local fileHandler = io.open(targetFile, "rb")
     local fileContent = fileHandler:read("*a")
     -- response(id, code, fileContent, resheader)
     fileHandler:close()
 
     --sendrequest("anserserverheader"..luaB64.b64(fileContent))
     sendrequest("anserserver"..fileContent, true)
+    sendrequest("111111", true)
     --sendrequest("anserserver200", true)
 end
 
