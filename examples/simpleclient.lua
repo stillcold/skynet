@@ -21,6 +21,7 @@ end
 sendrequest("hi")
 
 local function getrandomValidPicFile()
+    math.randomseed(os.time())
     local dirs = fileMgr:GetAllDirNameInDir("G:\\www\\spics")
     local dirCount = #dirs
 
@@ -66,7 +67,14 @@ local function curlRequest()
     --sendrequest("anserserver200", true)
 end
 
+
+local ka_count = 0
 while true do
+
+    ka_count = ka_count + 1
+    if ka_count > 100000000 then
+        ka_count = 0
+    end
     -- 接收服务器返回消息
     local str = socket.recv(fd)
     if str~=nil and str~="" then
@@ -92,7 +100,12 @@ while true do
             -- socket.send(fd, readstr)
             sendrequest(readstr)
         end
+        
     else
         socket.usleep(100)
+        if ka_count % (100000 * 30) == 0 then
+            sendrequest("keep-alive")
+            --print(ka_count)
+        end
     end
 end
