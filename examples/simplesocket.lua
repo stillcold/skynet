@@ -53,8 +53,8 @@ end
 skynet.start(function()
     print("==========Simple Socket Start=========")
     -- 监听一个端口，返回一个 id ，供 start 使用。
-    local id = socket.listen("127.0.0.1", 8108)
-    print("Listen socket :", "127.0.0.1", 8108)
+    local id = socket.listen("0.0.0.0", 8108)
+    print("Listen socket :", "0.0.0.0", 8108)
 
     socket.start(id , function(id, addr)
             -- 接收到客户端连接或发送消息()

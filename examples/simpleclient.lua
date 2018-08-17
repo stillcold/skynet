@@ -9,7 +9,7 @@ local socket = require "clientsocket"
 local luaB64 = require "b64InLua"
 local fileMgr = require "libChao_Lua/FileMgr/WindowsFileMgr"
 
-local fd = assert(socket.connect("127.0.0.1", 8108))
+local fd = assert(socket.connect("120.24.98.130", 8108))
 local sendrequest = function(content, bnotshow)
     if not bnotshow then
         print("send to server:", content)
