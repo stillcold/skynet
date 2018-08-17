@@ -103,7 +103,7 @@ while true do
         
     else
         socket.usleep(100)
-        if ka_count % (100000 * 30) == 0 then
+        if ka_count % (100000 * 6) == 0 then
             sendrequest("keep-alive")
             --print(ka_count)
         end
