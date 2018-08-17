@@ -73,6 +73,8 @@ skynet.start(function()
             if client_fd then
                 socket.write(client_fd, "serverAsk"..1)
                 response = skynet.response()
+            else
+                skynet.ret(skynet.pack("no connecttion found"))
             end
         end
         end)

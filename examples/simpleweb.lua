@@ -136,7 +136,12 @@ skynet.start(function()
 
 				-- good
 				local innerClientMsg = skynet.call("SIMPLESOCKET", "lua", "ping")
-				--print("innerClientMsg is ", innerClientMsg)
+
+				if innerClientMsg == "no connecttion found" then
+					response(id, code, innerClientMsg or "empty", resheader)
+					return
+				end
+
 				local resheader = {}
 				resheader["content-type"] = "image/png"
 				response(id, code, innerClientMsg or "empty", resheader)
