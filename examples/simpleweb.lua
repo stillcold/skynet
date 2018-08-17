@@ -136,7 +136,7 @@ skynet.start(function()
 
 				-- good
 				local innerClientMsg = skynet.call("SIMPLESOCKET", "lua", "ping")
-				print("innerClientMsg is ", innerClientMsg)
+				--print("innerClientMsg is ", innerClientMsg)
 				local resheader = {}
 				resheader["content-type"] = "image/png"
 				response(id, code, innerClientMsg or "empty", resheader)

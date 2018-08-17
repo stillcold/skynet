@@ -27,7 +27,7 @@ local function echo(id)
 
                 local realContent = table.concat( wholeContent, "")
 
-                print(realContent)
+                --print(realContent)
 
                 if string.sub(realContent, 1, 11) == "anserserver" then
                     if response then
