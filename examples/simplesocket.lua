@@ -12,28 +12,33 @@ local function echo(id)
     -- 任何一个服务只有在调用 socket.start(id) 之后，才可以收到这个 socket 上的数据。
     socket.start(id)
 
+    local wholeContent = ""
     while true do
         local str = socket.read(id)
+        
         if str then
             print("client say:"..str)
+            wholeContent = wholeContent..str
+            print(wholeContent)
+            -- 把一个字符串置入正常的写队列，skynet 框架会在 socket 可写时发送它。
+            --socket.write(id, str)
+        else
+            socket.close(id)
+            print("close socket")
+            return
+        end
+    end
 
-            if string.sub(str, 1, 11) == "anserserver" then
-                print("SIMPLESOCKET debug 1", str)
+    if string.sub(wholeContent, 1, 11) == "anserserver" then
+                -- print("SIMPLESOCKET debug 1", str)
+                --wholeContent = wholeContent..string.sub(str, 12)
                 --skynet.send("SIMPLEWEB", "lua", "ANSWER"..string.sub(str, 12))
                 if response then
-                    response(true, str)
+                    response(true, string.sub(wholeContent, 12))
                 end
             else
                 print("SIMPLESOCKET debug 2")
             end
-            
-            -- 把一个字符串置入正常的写队列，skynet 框架会在 socket 可写时发送它。
-            socket.write(id, str)
-        else
-            socket.close(id)
-            return
-        end
-    end
 end
 
 skynet.start(function()

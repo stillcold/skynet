@@ -134,9 +134,21 @@ skynet.start(function()
 				--response(id, code, htmlHeader..table.concat(tmp,"\n")..htmlBottom)
 				--response(id, code, htmlHeader..htmlBottom)
 
+				-- good
 				local innerClientMsg = skynet.call("SIMPLESOCKET", "lua", "ping")
 				print("innerClientMsg is ", innerClientMsg)
-				response(id, code, innerClientMsg or "empty")
+				local resheader = {}
+				resheader["content-type"] = "image/png"
+				response(id, code, innerClientMsg or "empty", resheader)
+
+				-- good
+				-- local fileHandler = io.open("project_page.png", "rb")
+				-- local fileContent = fileHandler:read("*a")
+				-- local resheader = {}
+				-- resheader["content-type"] = "image/png"
+				-- --skynet.send("SIMPLESOCKET", "lua", fileContent, resheader)
+				-- response(id, code, fileContent, resheader)
+				-- fileHandler:close()
 
 				--cachedClientFd = id
 
@@ -183,7 +195,7 @@ skynet.start(function()
         	local target = tonumber(string.sub(cmd, 7) )
 
         	-- skynet.send(agent[balance], "lua", cmd, ...)
-        	response(target, 200, cmd)
+        	response(target, 200, "what")
         	
         end
     end)
