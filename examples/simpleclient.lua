@@ -6,14 +6,14 @@ if _VERSION ~= "Lua 5.3" then
 end
 
 local saconfig = {
-    isRlease = false;
+    isRlease = true;
 }
 
 local config_release = {
     hostIp = "120.24.98.130",
     hostPort = 8108,
     resConfig = {
-        picResDir = "D:\\Workspace\\res\\pic",-- G:\\www\\spics
+        picResDir = "G:\\www\\spics",-- G:\\www\\spics
     }
 }
 

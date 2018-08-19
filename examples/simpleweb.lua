@@ -105,8 +105,8 @@ skynet.start(function()
 
 				if queryTbl.cmd == "getPic" then
 					print("request pic")
-					local innerClientMsg = [==[<a href="http://120.24.98.130:8001?cmd=goodAdjust" style=" color:#666; font-size:40px;">Good</a>
-<a href="http://120.24.98.130:8001?cmd=badAdjust" style=" color:#666; font-size:40px;">Bad</a>
+					local innerClientMsg = [==[<a href="http://120.24.98.130:8001?cmd=goodAdjust" style=" color:#666; font-size:80px;">Good</a>
+<a href="http://120.24.98.130:8001?cmd=badAdjust" style=" color:#666; font-size:80px;">Bad</a>
 <br>
 <img src= "http://120.24.98.130:8001?cmd=getPic" width="980" >
 ]==]
@@ -131,8 +131,8 @@ skynet.start(function()
 				if queryTbl.cmd == "goodAdjust" then
 					print("adjust")
 
-					local innerClientMsg = [==[<a href="http://120.24.98.130:8001?cmd=goodAdjust" style=" color:#666; font-size:40px;">Good</a>
-<a href="http://120.24.98.130:8001?cmd=badAdjust" style=" color:#666; font-size:40px;">Bad</a>
+					local innerClientMsg = [==[<a href="http://120.24.98.130:8001?cmd=goodAdjust" style=" color:#666; font-size:80px;">Good</a>
+<a href="http://120.24.98.130:8001?cmd=badAdjust" style=" color:#666; font-size:80px;">Bad</a>
 <br>
 <img src= "http://120.24.98.130:8001?cmd=getPic" width="980" >
 ]==]
@@ -143,8 +143,8 @@ skynet.start(function()
 
 				if queryTbl.cmd == "badAdjust" then
 					print("adjust")
-					local innerClientMsg = [==[<a href="http://120.24.98.130:8001?cmd=goodAdjust" style=" color:#666; font-size:40px;">Good</a>
-<a href="http://120.24.98.130:8001?cmd=badAdjust" style=" color:#666; font-size:40px;">Bad</a>
+					local innerClientMsg = [==[<a href="http://120.24.98.130:8001?cmd=goodAdjust" style=" color:#666; font-size:80px;">Good</a>
+<a href="http://120.24.98.130:8001?cmd=badAdjust" style=" color:#666; font-size:80px;">Bad</a>
 <br>
 <img src= "http://120.24.98.130:8001?cmd=getPic" width="980" >
 ]==]
