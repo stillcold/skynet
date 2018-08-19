@@ -5,24 +5,55 @@ if _VERSION ~= "Lua 5.3" then
     error "Use lua 5.3"
 end
 
+local saconfig = {
+    isRlease = false;
+}
+
+local config_release = {
+    hostIp = "120.24.98.130",
+    hostPort = 8108,
+    resConfig = {
+        picResDir = "G:\\www\\spics",
+    }
+}
+
+local config_test = {
+    hostIp = "127.0.0.1",
+    hostPort = 8108,
+    resConfig = {
+        picResDir = "D:\\Workspace\\res\\pic",
+    }
+}
+
+local config = config_test
+if saconfig.isRlease then
+    config = config_release
+end
+
+local weightTbl = {}
+local blackList = {}
+
 local socket = require "clientsocket"
 local luaB64 = require "b64InLua"
 local fileMgr = require "libChao_Lua/FileMgr/WindowsFileMgr"
 
-local fd = assert(socket.connect("120.24.98.130", 8108))
-local sendrequest = function(content, bnotshow)
-    if not bnotshow then
+local fd = assert(socket.connect(config.hostIp, config.hostPort))
+local sendRequestToServer = function(content, bNotShow)
+    if not bNotShow then
         print("send to server:", content)
     end
     
     socket.send(fd, content)
 end
 
-sendrequest("hi")
+sendRequestToServer("hi")
+
+local RPC = {}
+
 
 local function getrandomValidPicFile()
     math.randomseed(os.time())
-    local dirs = fileMgr:GetAllDirNameInDir("G:\\www\\spics")
+    local dirs = fileMgr:GetAllDirNameInDir(config.resConfig.picResDir)
     local dirCount = #dirs
 
     local targetFile
@@ -37,22 +68,26 @@ local function getrandomValidPicFile()
 
         local randomIndex = math.random(3, dirCount)
         local chosenDir = dirs[randomIndex]
-        local files = fileMgr:GetAllFileNameInDir("G:\\www\\spics\\"..chosenDir)
+        local files = fileMgr:GetAllFileNameInDir(config.resConfig.picResDir.."\\"..chosenDir)
         local fileCount = #files
 
         if fileCount > 0 then
             local randomFileIdx = math.random(fileCount)
             local chosenFile = files[randomFileIdx]
-            targetFile = "G:\\www\\spics\\"..chosenDir.."\\"..chosenFile
+            targetFile = config.resConfig.picResDir.."\\"..chosenDir.."\\"..chosenFile
             return targetFile
         end
     end
-
     
 end
 
-local function curlRequest()
 
+local function saveAndQuit()
+    sendRequestToServer("closeSockect")
+    socket.close(fd)
+end
+
+local function serverQueryPic()
     local targetFile = getrandomValidPicFile()
 
 
@@ -61,12 +96,22 @@ local function curlRequest()
     -- response(id, code, fileContent, resheader)
     fileHandler:close()
 
-    --sendrequest("anserserverheader"..luaB64.b64(fileContent))
-    sendrequest("anserserver"..fileContent, true)
-    sendrequest("111111", true)
-    --sendrequest("anserserver200", true)
+    sendRequestToServer("anserserver"..fileContent, true)
+    sendRequestToServer("111111", true)
 end
 
+
+function RPC:ServerQueryPic()
+    serverQueryPic()
+end
+
+function RPC:badAdjust()
+    serverQueryPic()
+end
+
+function RPC:goodAdjust()
+    serverQueryPic()
+end
 
 local ka_count = 0
 while true do
@@ -75,37 +120,29 @@ while true do
     if ka_count > 100000000 then
         ka_count = 0
     end
-    -- 接收服务器返回消息
     local str = socket.recv(fd)
     if str~=nil and str~="" then
-            print("server echo: "..str)
-            if string.sub(str, 1, 9) == "serverAsk" then
-                --sendrequest("anserserver"..string.sub(str, 10))
-                --sendrequest("anserserverhere is the pure response from client")
-                -- local code,body,header = httpc.get("10.240.160.221", "/project_page.png")
-                -- print(code, header)
-                --sendrequest("anserserver"..200)
-                curlRequest()
+            print("server message: "..str)
+            if RPC[str] then
+                RPC[str](RPC)
+                return
             end
     end
 
-    -- 读取用户输入消息
     local readstr = socket.readstdin()
     if readstr then
         if readstr == "quit" then
-            socket.close(fd)
+            saveAndQuit()
             break
         else
-            -- 把用户输入消息发送给服务器
             -- socket.send(fd, readstr)
-            sendrequest(readstr)
+            sendRequestToServer(readstr)
         end
         
     else
         socket.usleep(10000)
         if ka_count % (1000 * 6) == 0 then
-            sendrequest("keep-alive")
-            --print(ka_count)
+            sendRequestToServer("keep-alive")
         end
     end
 end

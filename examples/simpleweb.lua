@@ -89,77 +89,59 @@ skynet.start(function()
 				end
 				local path, query = urllib.parse(url)
 				table.insert(tmp, string.format("path: %s", path))
+
+				local queryTbl = {}
 				if query then
-					local q = urllib.parse_query(query)
-					for k, v in pairs(q) do
+					queryTbl = urllib.parse_query(query)
+					for k, v in pairs(queryTbl) do
 						table.insert(tmp, string.format("query: %s= %s", k,v))
 					end
 				end
 				--table.insert(tmp, "-----header----")
-				for k,v in pairs(header) do
-					--table.insert(tmp, string.format("%s = %s",k,v))
-				end
-				
-				local bodyTbl = {}
-				if body then
-					local q = urllib.parse_query(body)
-					for k, v in pairs(q) do
-						print("set",k,v)
-						k = trim(k)
-						v = trim(v)
-						bodyTbl[k] = v
+
+
+				if queryTbl.cmd == "getPic" then
+					local innerClientMsg = skynet.call("SIMPLESOCKET", "lua", "getPicFromResClient")
+
+					if innerClientMsg == "no connecttion found" then
+						response(id, code, innerClientMsg or "empty", resheader)
+						return
 					end
-				end
 
-				if not bodyTbl.page then
-					bodyTbl.page = 1
-				end
-				print("recieve page "..bodyTbl.page)
-
-				local beginIndex = tonumber(bodyTbl.page or 1 ) or 1 + 1
-
-				table.insert(tmp, "-----body----<br/>" .. body)
-				
-				localHmtlVarTbl.curIndex = beginIndex + 1
-				print("set beginIndex "..beginIndex)
-
-				for i=beginIndex,beginIndex+1 do
-					table.insert(tmp, mainContent[i] or "")
-				end
-
-				
-
-				htmlBottom = string.gsub(htmlBottom, "%$([%w]+)", getLocalVar)
-
-				--response(id, code, htmlHeader..table.concat(tmp,"\n")..htmlBottom)
-				--response(id, code, htmlHeader..htmlBottom)
-
-				-- good
-				local innerClientMsg = skynet.call("SIMPLESOCKET", "lua", "ping")
-
-				if innerClientMsg == "no connecttion found" then
+					local resheader = {}
+					resheader["content-type"] = "image/png"
 					response(id, code, innerClientMsg or "empty", resheader)
+
 					return
 				end
 
-				local resheader = {}
-				resheader["content-type"] = "image/png"
-				response(id, code, innerClientMsg or "empty", resheader)
+				if queryTbl.cmd == "goodAdjust" then
+					skynet.send("SIMPLESOCKET", "lua", "goodAdjust")
 
-				-- good
-				-- local fileHandler = io.open("project_page.png", "rb")
-				-- local fileContent = fileHandler:read("*a")
-				-- local resheader = {}
-				-- resheader["content-type"] = "image/png"
-				-- --skynet.send("SIMPLESOCKET", "lua", fileContent, resheader)
-				-- response(id, code, fileContent, resheader)
-				-- fileHandler:close()
+					local innerClientMsg = [==[<a href="http://127.0.0.1:8001?cmd=goodAdjust" style=" color:#666; font-size:40px;">Good</a>
+<a href="http://127.0.0.1:8001?cmd=badAdjust" style=" color:#666; font-size:40px;">Bad</a>
+<br>
+<img src= "http://127.0.0.1:8001?cmd=getPic" width="980" >
+]==]
 
-				--cachedClientFd = id
+					response(id, code, innerClientMsg or "empty")
+					return
 
-				--print("cached id is", id)
+				end
 
-				--skynet.send("SIMPLESOCKET", "lua", "ping"..id)
+				if queryTbl.cmd == "badAdjust" then
+					local innerClientMsg = [==[<a href="http://127.0.0.1:8001?cmd=goodAdjust" style=" color:#666; font-size:40px;">Good</a>
+<a href="http://127.0.0.1:8001?cmd=badAdjust" style=" color:#666; font-size:40px;">Bad</a>
+<br>
+<img src= "http://127.0.0.1:8001?cmd=getPic" width="980" >
+]==]
+
+					response(id, code, innerClientMsg or "empty")
+					return
+
+				end
+
+				
 			end
 		else
 			if url == sockethelper.socket_error then

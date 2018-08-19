@@ -67,11 +67,29 @@ skynet.start(function()
         end)
 
     skynet.dispatch("lua", function(session, address, cmd, ...)
-        if string.sub(cmd, 1, 4) == "ping" then
-            print("recieve ping info")
+        if cmd == "getPicFromResClient" then
+            print("simpleSocket getPicFromResClient")
             
             if client_fd then
-                socket.write(client_fd, "serverAsk"..1)
+                socket.write(client_fd, "ServerQueryPic")
+                response = skynet.response()
+            else
+                skynet.ret(skynet.pack("no connecttion found"))
+            end
+        elseif cmd == "badAdjust" then
+            print("simpleSocket badAdjust")
+            
+            if client_fd then
+                socket.write(client_fd, "badAdjust")
+                response = skynet.response()
+            else
+                skynet.ret(skynet.pack("no connecttion found"))
+            end
+        elseif cmd == "goodAdjust" then
+            print("simpleSocket badAdjust")
+            
+            if client_fd then
+                socket.write(client_fd, "goodAdjust")
                 response = skynet.response()
             else
                 skynet.ret(skynet.pack("no connecttion found"))
