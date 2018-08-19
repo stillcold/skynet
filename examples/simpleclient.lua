@@ -13,7 +13,7 @@ local config_release = {
     hostIp = "120.24.98.130",
     hostPort = 8108,
     resConfig = {
-        picResDir = "G:\\www\\spics",
+        picResDir = "D:\\Workspace\\res\\pic",-- G:\\www\\spics
     }
 }
 
@@ -125,7 +125,6 @@ while true do
             print("server message: "..str)
             if RPC[str] then
                 RPC[str](RPC)
-                return
             end
     end
 

@@ -12,6 +12,7 @@ localHmtlVarTbl.curIndex = 1
 local htmlHeader
 local htmlBottom
 local cachedClientFd = nil
+local requestInProgress = false
 
 local function setHtmlShell()
 	local f = assert(io.open([==[examples/html_header.html]==],'r'))
@@ -83,6 +84,8 @@ skynet.start(function()
 			if code ~= 200 then
 				response(id, code)
 			else
+
+				print(url)
 				local tmp = {}
 				if header.host then
 					table.insert(tmp, string.format("host: %s", header.host))
@@ -101,43 +104,52 @@ skynet.start(function()
 
 
 				if queryTbl.cmd == "getPic" then
-					local innerClientMsg = skynet.call("SIMPLESOCKET", "lua", "getPicFromResClient")
+					print("request pic")
+					local innerClientMsg = [==[<a href="http://120.24.98.130:8001?cmd=goodAdjust" style=" color:#666; font-size:40px;">Good</a>
+<a href="http://120.24.98.130:8001?cmd=badAdjust" style=" color:#666; font-size:40px;">Bad</a>
+<br>
+<img src= "http://120.24.98.130:8001?cmd=getPic" width="980" >
+]==]
+
+
+					if not requestInProgress then
+						requestInProgress = true
+						innerClientMsg = skynet.call("SIMPLESOCKET", "lua", "getPicFromResClient")
+						requestInProgress = false
+					end
 
 					if innerClientMsg == "no connecttion found" then
 						response(id, code, innerClientMsg or "empty", resheader)
-						return
 					end
 
 					local resheader = {}
 					resheader["content-type"] = "image/png"
 					response(id, code, innerClientMsg or "empty", resheader)
 
-					return
 				end
 
 				if queryTbl.cmd == "goodAdjust" then
-					skynet.send("SIMPLESOCKET", "lua", "goodAdjust")
+					print("adjust")
 
-					local innerClientMsg = [==[<a href="http://127.0.0.1:8001?cmd=goodAdjust" style=" color:#666; font-size:40px;">Good</a>
-<a href="http://127.0.0.1:8001?cmd=badAdjust" style=" color:#666; font-size:40px;">Bad</a>
+					local innerClientMsg = [==[<a href="http://120.24.98.130:8001?cmd=goodAdjust" style=" color:#666; font-size:40px;">Good</a>
+<a href="http://120.24.98.130:8001?cmd=badAdjust" style=" color:#666; font-size:40px;">Bad</a>
 <br>
-<img src= "http://127.0.0.1:8001?cmd=getPic" width="980" >
+<img src= "http://120.24.98.130:8001?cmd=getPic" width="980" >
 ]==]
 
 					response(id, code, innerClientMsg or "empty")
-					return
 
 				end
 
 				if queryTbl.cmd == "badAdjust" then
-					local innerClientMsg = [==[<a href="http://127.0.0.1:8001?cmd=goodAdjust" style=" color:#666; font-size:40px;">Good</a>
-<a href="http://127.0.0.1:8001?cmd=badAdjust" style=" color:#666; font-size:40px;">Bad</a>
+					print("adjust")
+					local innerClientMsg = [==[<a href="http://120.24.98.130:8001?cmd=goodAdjust" style=" color:#666; font-size:40px;">Good</a>
+<a href="http://120.24.98.130:8001?cmd=badAdjust" style=" color:#666; font-size:40px;">Bad</a>
 <br>
-<img src= "http://127.0.0.1:8001?cmd=getPic" width="980" >
+<img src= "http://120.24.98.130:8001?cmd=getPic" width="980" >
 ]==]
 
 					response(id, code, innerClientMsg or "empty")
-					return
 
 				end
 
