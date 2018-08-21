@@ -1,12 +1,12 @@
 package.cpath = "luaclib/?.so"
-package.path = "lualib/?.lua;myexample/e1/?.lua"
+package.path = "lualib/?.lua;myexample/e1/?.lua;lualib/libChao_Lua/?.lua;"
 
 if _VERSION ~= "Lua 5.3" then
     error "Use lua 5.3"
 end
 
 local saconfig = {
-    isRlease = true;
+    isRlease = true
 }
 
 local config_release = {
@@ -35,7 +35,9 @@ local blackList = {}
 
 local socket = require "clientsocket"
 local luaB64 = require "b64InLua"
-local fileMgr = require "libChao_Lua/FileMgr/WindowsFileMgr"
+local fileMgr = require "FileMgr/WindowsFileMgr"
+local huffmanWeightTbl = require "Common/huffmanWeightTbl"
+local lastFilePath = ""
 
 local fd = assert(socket.connect(config.hostIp, config.hostPort))
 local sendRequestToServer = function(content, bNotShow)
@@ -51,8 +53,18 @@ sendRequestToServer("hi")
 local RPC = {}
 
 
+local function getrandomValidPicFileFromWeightTbl()
+    print("Get from weight table")
+    local filePath = huffmanWeightTbl:SelectInHuffmanTree(weightTbl)
+    return config.resConfig.picResDir.."\\"..filePath
+end
+
 local function getrandomValidPicFile()
     math.randomseed(os.time())
+
+    if huffmanWeightTbl:IsWeightTree(weightTbl) and math.random() <= 0.5 then
+        return getrandomValidPicFileFromWeightTbl()
+    end
     local dirs = fileMgr:GetAllDirNameInDir(config.resConfig.picResDir)
     local dirCount = #dirs
 
@@ -74,7 +86,9 @@ local function getrandomValidPicFile()
         if fileCount > 0 then
             local randomFileIdx = math.random(fileCount)
             local chosenFile = files[randomFileIdx]
-            targetFile = config.resConfig.picResDir.."\\"..chosenDir.."\\"..chosenFile
+            lastFilePath = chosenDir.."\\"..chosenFile
+            targetFile = config.resConfig.picResDir.."\\"..lastFilePath
+
             return targetFile
         end
     end
@@ -105,12 +119,18 @@ function RPC:ServerQueryPic()
     serverQueryPic()
 end
 
+
 function RPC:badAdjust()
-    serverQueryPic()
+    if lastFilePath then
+        weightTbl = huffmanWeightTbl:AddKeyWeight(nil, lastFilePath, -100)
+    end
 end
 
 function RPC:goodAdjust()
-    serverQueryPic()
+    if lastFilePath then
+        weightTbl = huffmanWeightTbl:AddKeyWeight(nil, lastFilePath, 100)
+    end
+    
 end
 
 local ka_count = 0
@@ -125,6 +145,8 @@ while true do
             print("server message: "..str)
             if RPC[str] then
                 RPC[str](RPC)
+            else
+                RPC:ServerQueryPic()
             end
     end
 

@@ -81,18 +81,12 @@ skynet.start(function()
             
             if client_fd then
                 socket.write(client_fd, "badAdjust")
-                response = skynet.response()
-            else
-                skynet.ret(skynet.pack("no connecttion found"))
             end
         elseif cmd == "goodAdjust" then
             print("simpleSocket badAdjust")
             
             if client_fd then
                 socket.write(client_fd, "goodAdjust")
-                response = skynet.response()
-            else
-                skynet.ret(skynet.pack("no connecttion found"))
             end
         end
         end)

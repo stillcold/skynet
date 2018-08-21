@@ -14,6 +14,26 @@ local htmlBottom
 local cachedClientFd = nil
 local requestInProgress = false
 
+local isRlease = true
+
+local function getDefaultHtml()
+    if isRlease then
+        return [==[<a href="http://120.24.98.130:8001?cmd=goodAdjust" style=" color:#666; font-size:80px;">Good</a>
+<a href="http://120.24.98.130:8001?cmd=badAdjust" style=" color:#666; font-size:80px;">Bad</a>
+<br>
+<img src= "http://120.24.98.130:8001?cmd=getPic" width="980" >
+]==]
+
+    end
+
+    return [==[<a href="http://192.168.0.107:8001?cmd=goodAdjust" style=" color:#666; font-size:80px;">Good</a>
+<a href="http://192.168.0.107:8001?cmd=badAdjust" style=" color:#666; font-size:80px;">Bad</a>
+<br>
+<img src= "http://192.168.0.107:8001?cmd=getPic" width="980" >
+]==]
+
+end
+
 local function setHtmlShell()
 	local f = assert(io.open([==[examples/html_header.html]==],'r'))
 	local content = f:read("*all")
@@ -105,11 +125,7 @@ skynet.start(function()
 
 				if queryTbl.cmd == "getPic" then
 					print("request pic")
-					local innerClientMsg = [==[<a href="http://120.24.98.130:8001?cmd=goodAdjust" style=" color:#666; font-size:80px;">Good</a>
-<a href="http://120.24.98.130:8001?cmd=badAdjust" style=" color:#666; font-size:80px;">Bad</a>
-<br>
-<img src= "http://120.24.98.130:8001?cmd=getPic" width="980" >
-]==]
+					local innerClientMsg = getDefaultHtml()
 
 
 					if not requestInProgress then
@@ -131,25 +147,21 @@ skynet.start(function()
 				if queryTbl.cmd == "goodAdjust" then
 					print("adjust")
 
-					local innerClientMsg = [==[<a href="http://120.24.98.130:8001?cmd=goodAdjust" style=" color:#666; font-size:80px;">Good</a>
-<a href="http://120.24.98.130:8001?cmd=badAdjust" style=" color:#666; font-size:80px;">Bad</a>
-<br>
-<img src= "http://120.24.98.130:8001?cmd=getPic" width="980" >
-]==]
+					local innerClientMsg = getDefaultHtml()
 
 					response(id, code, innerClientMsg or "empty")
+
+					skynet.send("SIMPLESOCKET", "lua", "goodAdjust")
 
 				end
 
 				if queryTbl.cmd == "badAdjust" then
 					print("adjust")
-					local innerClientMsg = [==[<a href="http://120.24.98.130:8001?cmd=goodAdjust" style=" color:#666; font-size:80px;">Good</a>
-<a href="http://120.24.98.130:8001?cmd=badAdjust" style=" color:#666; font-size:80px;">Bad</a>
-<br>
-<img src= "http://120.24.98.130:8001?cmd=getPic" width="980" >
-]==]
+					local innerClientMsg = getDefaultHtml()
 
 					response(id, code, innerClientMsg or "empty")
+
+					skynet.send("SIMPLESOCKET", "lua", "badAdjust")
 
 				end
 
